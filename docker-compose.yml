@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  blockchain:
+    image: pelikanfix16/nodetest 
+    container_name: ganache
+    ports:
+      - "8545:8545"
+    tty: true
+    stdin_open: true
+
+  nodejs:
+    image: pelikanfix16/nodetest 
+    container_name: nodejstest
+    links:
+      - blockchain
+    volumes:
+      - ./src/Layout/Webpage:/app
+
+    tty: true
+    stdin_open: true
+
+  truffle:
+    image: pelikanfix16/nodetest 
+    container_name: truffle
+    links:
+      - blockchain
+    volumes:
+      - ./src/Core/Contracts:/app
+    tty: true
+    stdin_open: true
+
