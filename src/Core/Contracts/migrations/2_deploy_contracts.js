@@ -1,10 +1,16 @@
-
 var SafeCoin = artifacts.require("./SafeCoin.sol");
-var TradeCenter = artifacts.require("./TradeCenter.sol");
+var TestContract = artifacts.require("./TestContract.sol");
+var TestOverload = artifacts.require("./TestOverload.sol");
 
 module.exports = function(deployer) {
 
     deployer.deploy(SafeCoin);
-    deployer.deploy(TradeCenter);
+
+    deployer.deploy(TestContract);
+
+    deployer.deploy(TestOverload);
+
+
+
 
 };
