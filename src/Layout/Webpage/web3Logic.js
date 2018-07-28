@@ -4,119 +4,6 @@ const tradecenterAddress = "0x3890025b77cc5dd3841e8914abb59c625ff6a5e4";
 
 
 
-class Person{
-
-    //TODO hash img (IPFS) protocol from another contract
-
-    constructor(address,contract,name){
-        this.address = address;
-        this.contract = contract;
-        this.name = name;
-    }
-
-    getTokensBalance(){
-
-        return this.contract.balanceOf(this.address);
-
-    }
-
-    transferTokens(address,tokens){
-
-        this.contract.transfer(address,web3.toWei(tokens,'ether'),{from:this.address});
-
-    }
-
-
-}
-
-
-
-function CreatePerson(person){
-
-
-    this.person = person;
-
-    var createContainer = function(){
-
-        var container = document.createElement("div");
-        container.setAttribute("class","person");
-
-        container.onclick = ()=>{
-
-
-            var SelectedPerson = document.getElementById("selected");
-            var SelectedAddress = document.getElementById("address");
-
-            SelectedPerson.innerHTML = "Selected Person: "+person.name;
-            SelectedAddress.innerHTML = "Selected address: "+person.address;
-
-
-            var btn = document.getElementById("btn");
-
-            btn.onclick = ()=>{
-
-                var value = document.getElementById("text_input").value;
-                var number = document.getElementById("number_input").value;
-
-                if(value !== ""){
-
-                    person.transferTokens(value,number);
-
-                    location.reload();
-
-
-                }
-
-            };
-        };
-
-        return container;
-    }
-
-    var createImg = function(){
-
-        var img = document.createElement("img");
-
-        //TODO set atribute src to IPFS hash to load from network
-
-        img.setAttribute("src","");
-
-        return img;
-    }
-
-    var createName = function(){
-
-        var name = document.createElement("h1");
-
-        name.appendChild(document.createTextNode(person.name));
-
-        return name;
-    }
-
-    var createTokens = function(){
-
-        var tokens = document.createElement("p");
-        tokens.appendChild(document.createTextNode("Tokens: "));
-        tokens.appendChild(document.createTextNode(person.getTokensBalance()/10**18));
-
-        return tokens;
-    }
-
-    this.getPerson = function(){
-
-        var container = createContainer();
-
-        container.appendChild(createImg());
-        container.appendChild(createName());
-        container.appendChild(createTokens());
-
-
-        return container;
-
-    }
-
-
-}
 
 
 if(typeof web3 !== 'undefined'){
@@ -128,6 +15,8 @@ if(typeof web3 !== 'undefined'){
 
     web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
 
+
+}
     //main account[0] only for tests
 
     web3.eth.defaultAccount = web3.eth.accounts[0];
@@ -441,18 +330,36 @@ if(typeof web3 !== 'undefined'){
       "type": "function"
     },
     {
-      "constant": true,
+      "constant": false,
       "inputs": [
         {
-          "name": "_from",
+          "name": "_recipient",
           "type": "address"
         }
       ],
-      "name": "getBalances",
+      "name": "addRecipient",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "acceptContract",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getAcceptation",
       "outputs": [
         {
           "name": "",
-          "type": "uint256"
+          "type": "bool"
         }
       ],
       "payable": false,
@@ -468,30 +375,19 @@ if(typeof web3 !== 'undefined'){
 
     var account1 = web3.eth.accounts[1];
 
-    var temp = document.getElementById("container");
-
-    var person1 = new Person(account0,tokenContract,"xyz0");
-
-    var person2 = new Person(account1,tokenContract,"xyz1");
 
 
-    var person01 = new CreatePerson(person1);
 
-    var person02 = new CreatePerson(person2);
-
-    temp.appendChild(person01.getPerson());
+console.log(web3.personal.unlockAccount(account0,"test",1));
 
 
-    temp.appendChild(person02.getPerson());
-
-    console.log(tokenContract.transfer['address,uint256,bytes'](tradecenterAddress,web3.toWei(20,'ether'),web3.toAscii("te"),{from:account0}));
+    //    console.log(tokenContract.transfer['address,uint256,bytes'](tradecenterAddress,web3.toWei(20,'ether'),web3.toAscii("te"),{from:account0}));
 
         //("0xab327cdaf135c3dcacf58a4686f11dcd0ef1d031",web3.toWei(20,'ether'),'tes'));
 
 
-    var balance = tradeCenter.getBalances(account0);
+    //var balance = tradeCenter.getBalances(account0);
 
-    console.log(balance);
+    //console.log(balance);
 
-}
 
