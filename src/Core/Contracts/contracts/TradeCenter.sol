@@ -51,11 +51,11 @@ contract TradeCenter is ERC223ReceivingContract{
         Contract storage contr = _contracts[_contractsIndex[msg.sender]];
 
         if(msg.sender == contr.from){
-            contr.creator != contr.creator;
+            contr.creator = !contr.creator;
         }
 
         else if(msg.sender == contr.to){
-            contr.recipient != contr.recipient;
+            contr.recipient = !contr.recipient;
         }
 
     }

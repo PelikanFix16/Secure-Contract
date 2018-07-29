@@ -6,6 +6,60 @@ const tradecenterAddress = "0x3890025b77cc5dd3841e8914abb59c625ff6a5e4";
 
 
 
+
+async function createContract(address,tokens,data,sender) {
+
+    if(!web3.isAddress(address)){
+
+        return false;
+    }
+
+    if(!web3.isAddress(sender)){
+        return false;
+    }
+
+
+    if(typeof tokens !== 'number'){
+        return false;
+    }
+
+    if(typeof data !== 'string'){
+        return false;
+    }
+
+    let gasCost = await tokenContract.transfer['address,uint256,bytes'].estimateGas(address,tokens,data);
+
+    return await tokenContract.transfer['address,uint256,bytes'].sendTransaction(address,tokens,data,{from:sender,gas:gasCost});
+
+
+
+}
+
+function getAcceptation(adr) {
+
+    if(!web3.isAddress(adr)){
+        return false;
+    }
+
+    return tradeCenter.getAcceptation.call({from:adr});
+
+
+}
+
+async function acceptContract(adr) {
+
+
+    return await tradeCenter.acceptContract.sendTransaction({from:adr});
+
+}
+
+async function unlockAccount(adr,pass) {
+
+
+   return await web3.personal.unlockAccount(adr,pass,1);
+}
+
+
 if(typeof web3 !== 'undefined'){
 
     web3 = new Web3(web3.currentProvider);
@@ -378,10 +432,18 @@ if(typeof web3 !== 'undefined'){
 
 
 
-console.log(web3.personal.unlockAccount(account0,"test",1));
+//console.log(web3.personal.unlockAccount(account0,"test",1));
+    //estimateGas
 
+//console.log(createContract(account0,200,"test",account0));
 
-    //    console.log(tokenContract.transfer['address,uint256,bytes'](tradecenterAddress,web3.toWei(20,'ether'),web3.toAscii("te"),{from:account0}));
+ console.log(acceptContract(account0));
+
+    console.log(getAcceptation(account0));
+
+//console.log(unlockAccount(account0,"test"));
+
+// console.log(tokenContract.transfer['address,uint256,bytes'](tradecenterAddress,web3.toWei(20,'ether'),web3.toAscii("te"),{from:account0}));
 
         //("0xab327cdaf135c3dcacf58a4686f11dcd0ef1d031",web3.toWei(20,'ether'),'tes'));
 
