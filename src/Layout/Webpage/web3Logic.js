@@ -1,6 +1,6 @@
 
-const SafeCoinAddress = "0x0e6edc31eb5022fac29a442493d89db41e21ce67";
-const tradecenterAddress = "0x3890025b77cc5dd3841e8914abb59c625ff6a5e4";
+const SafeCoinAddress = "0x306441ef9e480a016875dc52aaac440e0ff49f8d";
+const tradecenterAddress = "0x27131ae19907ef5e70df9783281d661297399848";
 
 
 
@@ -27,9 +27,9 @@ async function createContract(address,tokens,data,sender) {
         return false;
     }
 
-    let gasCost = await tokenContract.transfer['address,uint256,bytes'].estimateGas(address,tokens,data);
+    let gasCost = await tokenContract.transfer['address,uint256,bytes'].estimateGas(address,web3.toWei(tokens,"ether"),web3.fromAscii(data));
 
-    return await tokenContract.transfer['address,uint256,bytes'].sendTransaction(address,tokens,data,{from:sender,gas:gasCost});
+    return await tokenContract.transfer['address,uint256,bytes'].sendTransaction(address,web3.toWei(tokens,"ether"),web3.fromAscii(data),{from:sender,gas:gasCost});
 
 
 
@@ -46,11 +46,35 @@ function getAcceptation(adr) {
 
 }
 
+function getData(adr) {
+
+    if(!web3.isAddress(adr)){
+        return false;
+
+
+    }
+
+    var data =  tradeCenter.getData.call({from:adr});
+    return web3.toAscii(data);
+
+}
+
 async function acceptContract(adr) {
 
+    if(!web3.isAddress(adr)){
+        return false;
+    }
 
-    return await tradeCenter.acceptContract.sendTransaction({from:adr});
 
+    let gasCost = await tradeCenter.acceptContract.estimateGas({from:account0});
+    console.log(gasCost);
+    let s = await tradeCenter.acceptContract.sendTransaction({from:adr,gas:gasCost});
+    //let ret = getAcceptation(adr);
+    // return ret;
+
+    let gasCost2 = await tradeCenter.finalize.estimateGas({from:adr});
+    console.log(gasCost2);
+    let w = await tradeCenter.finalize.sendTransaction({from:adr,gas:gasCost2});
 }
 
 async function unlockAccount(adr,pass) {
@@ -58,6 +82,18 @@ async function unlockAccount(adr,pass) {
 
    return await web3.personal.unlockAccount(adr,pass,1);
 }
+
+async function addRecipient(adr,cr) {
+
+    if(!web3.isAddress(adr)){
+        return false;
+    }
+
+    let gasCost = await tradeCenter.addRecipient.estimateGas(adr);
+    let s = await tradeCenter.addRecipient.sendTransaction(adr,{from:cr,gas:gasCost});
+
+}
+
 
 
 if(typeof web3 !== 'undefined'){
@@ -362,6 +398,17 @@ if(typeof web3 !== 'undefined'){
     var tradeCenter = web3.eth.contract(
 [
     {
+      "inputs": [
+        {
+          "name": "_safe",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
       "constant": false,
       "inputs": [
         {
@@ -407,6 +454,15 @@ if(typeof web3 !== 'undefined'){
       "type": "function"
     },
     {
+      "constant": false,
+      "inputs": [],
+      "name": "finalize",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "constant": true,
       "inputs": [],
       "name": "getAcceptation",
@@ -414,6 +470,34 @@ if(typeof web3 !== 'undefined'){
         {
           "name": "",
           "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getData",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getTokens",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
         }
       ],
       "payable": false,
@@ -430,26 +514,21 @@ if(typeof web3 !== 'undefined'){
     var account1 = web3.eth.accounts[1];
 
 
+    console.log(unlockAccount(account0,'test'));
+
+    console.log(unlockAccount(account1,'test1'));
 
 
-//console.log(web3.personal.unlockAccount(account0,"test",1));
-    //estimateGas
-
-//console.log(createContract(account0,200,"test",account0));
-
- console.log(acceptContract(account0));
-
-    console.log(getAcceptation(account0));
-
-//console.log(unlockAccount(account0,"test"));
-
-// console.log(tokenContract.transfer['address,uint256,bytes'](tradecenterAddress,web3.toWei(20,'ether'),web3.toAscii("te"),{from:account0}));
-
-        //("0xab327cdaf135c3dcacf58a4686f11dcd0ef1d031",web3.toWei(20,'ether'),'tes'));
+// console.log(createContract(tradecenterAddress,200,"test21",account0));
 
 
-    //var balance = tradeCenter.getBalances(account0);
 
-    //console.log(balance);
+//console.log(tokenContract.balanceOf.call(account1));
 
+// console.log(addRecipient(account1,account0));
+
+//console.log(acceptContract(account1));
+console.log(getAcceptation(account1));
+
+//console.log(getData(account0));
 
