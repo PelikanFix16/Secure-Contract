@@ -1,3 +1,4 @@
+
 pragma solidity ^0.4.4;
 
 import "./ERC223_receiving_contract.sol";
@@ -30,8 +31,17 @@ contract TradeCenter is ERC223ReceivingContract{
     SafeCoin private _safecoin;
 
 
+    address temp;
+
     function TradeCenter(address _safe) public{
         _safecoin = SafeCoin(_safe);
+
+        temp = _safe;
+
+    }
+
+    function getTempAddr() public view returns(address){
+        return temp;
 
     }
 
@@ -56,7 +66,7 @@ contract TradeCenter is ERC223ReceivingContract{
         _contractsIndex[_recipient] = _contractsIndex[msg.sender];
     }
 
-    function acceptContract() public {
+    function acceptContract() public returns(bool){
     
         Contract storage contr = _contracts[_contractsIndex[msg.sender]];
 
@@ -72,20 +82,16 @@ contract TradeCenter is ERC223ReceivingContract{
         }
 
         
-
-        
-    }
-
-    function finalize() public {
-        
-        Contract memory contr = _contracts[_contractsIndex[msg.sender]];
-        require(contr.from != address(0));
-        require(contr.to != address(0));
-        
         if(contr.creator && contr.recipient){
-            _safecoin.transfer(contr.to,contr.tokens);
+            if(_safecoin.transfer(contr.to,contr.tokens)){
+                
+                return true;
+            }
+            
         }
 
+        return false;
+        
     }
 
     function getAcceptation() public view returns(bool){
@@ -130,3 +136,4 @@ contract TradeCenter is ERC223ReceivingContract{
 
 
 }
+

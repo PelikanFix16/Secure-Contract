@@ -1,6 +1,6 @@
 
-const SafeCoinAddress = "0x99e2c8fd9fbfb011740f34331401f92804147f18";
-const tradecenterAddress = "0xfbed4ff18ac4a49965a64b2cd2b5a84c9f8e947c";
+const SafeCoinAddress = "0x0af9b5966549479317c95cb056c19b4defcc868a";
+const tradecenterAddress = "0xc8388ae1186880ae8b40235a6f687d69bbcb578c";
 
 
 
@@ -66,8 +66,8 @@ async function acceptContract(adr) {
     }
 
 
-         let gasC = await tradeCenter.acceptContract.estimateGas({from:adr});
-     console.log(gasC);
+    //let gasC = await tradeCenter.acceptContract.estimateGas({from:adr});
+
     let s = await tradeCenter.acceptContract.sendTransaction({from:adr});
     console.log(s);
 }
@@ -393,15 +393,18 @@ if(typeof web3 !== 'undefined'){
     var tradeCenter = web3.eth.contract(
 [
     {
+      "constant": false,
       "inputs": [
         {
           "name": "_safe",
           "type": "address"
         }
       ],
+      "name": "construct",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "constructor"
+      "type": "function"
     },
     {
       "constant": true,
@@ -457,12 +460,7 @@ if(typeof web3 !== 'undefined'){
       "constant": false,
       "inputs": [],
       "name": "acceptContract",
-      "outputs": [
-        {
-          "name": "",
-          "type": "bool"
-        }
-      ],
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
@@ -532,20 +530,11 @@ if(typeof web3 !== 'undefined'){
 
 //console.log(tokenContract.balanceOf.call(account1));
 
-//console.log(addRecipient(account1,account0));
+//   console.log(addRecipient(account1,account0));
 
-//  console.log(acceptContract(account1));
+ console.log(acceptContract(account1));
 
-// console.log(getAcceptation(account1));
-
-//console.log(acceptContract(account0));
-
-//console.log(getAcceptation(account0));
-
-
-//console.log(tokenContract.balanceOf(tradecenterAddress));
+ console.log(getAcceptation(account1));
 
 //console.log(getData(account0));
-
-//console.log(tradeCenter.getTokens({from:account0}));
 
