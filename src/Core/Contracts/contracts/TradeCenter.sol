@@ -16,9 +16,12 @@ contract TradeCenter is ERC223ReceivingContract{
         address from;
         address to;
         uint tokens;
+        uint historyTokens;
         bytes data;
         bool creator;
         bool recipient;
+        bool creatorReject;
+        bool recipientReject;
 
     }
 
@@ -49,7 +52,7 @@ contract TradeCenter is ERC223ReceivingContract{
     function tokenFallback(address _from, uint _value, bytes _data) public {
 
         _contractsIndex[_from] = _index;
-        _contracts[_index] = Contract(_from,address(0),_value,_data,false,false);
+        _contracts[_index] = Contract(_from,address(0),_value,_value,_data,false,false,false,false);
         _index++;
 
     }
@@ -72,19 +75,22 @@ contract TradeCenter is ERC223ReceivingContract{
 
         require(contr.from != address(0));
         require(contr.to != address(0));
+        require(contr.historyTokens>0);
 
         if(msg.sender == contr.from){
             contr.creator = !contr.creator;
+            contr.creatorReject = false;
         }
 
         else if(msg.sender == contr.to){
             contr.recipient = !contr.recipient;
+            contr.recipientReject = false;
         }
 
         
         if(contr.creator && contr.recipient){
             if(_safecoin.transfer(contr.to,contr.tokens)){
-                
+                contr.historyTokens = 0;
                 return true;
             }
             
@@ -92,6 +98,50 @@ contract TradeCenter is ERC223ReceivingContract{
 
         return false;
         
+    }
+
+    function rejectContract() public returns(bool){
+        Contract storage contr = _contracts[_contractsIndex[msg.sender]];
+
+        require(contr.from != address(0));
+        require(contr.to != address(0));
+        require(contr.historyTokens>0);
+        
+        if(msg.sender == contr.from){
+            contr.creatorReject = !contr.creatorReject;
+            contr.creator = false;
+        }
+        
+        else if(msg.sender == contr.to){
+            contr.recipientReject = !contr.recipientReject;
+            contr.recipient = false;
+        }
+        if(contr.creatorReject && contr.recipientReject){
+            if(_safecoin.transfer(contr.from,contr.tokens)){
+                contr.historyTokens = 0;
+                return true;
+            }
+        }
+
+        return false;
+
+
+    }
+
+    function getReject() public view returns(bool){
+        Contract memory contr = _contracts[_contractsIndex[msg.sender]];
+
+        require(contr.from != address(0));
+        require(contr.to != address(0));
+        
+        if(msg.sender == contr.from){
+            return contr.creatorReject;
+        }
+        else if(msg.sender == contr.to){
+            return contr.recipientReject;
+        }
+
+
     }
 
     function getAcceptation() public view returns(bool){
@@ -131,6 +181,7 @@ contract TradeCenter is ERC223ReceivingContract{
         return contr.tokens;
 
     }
+
 
 
 

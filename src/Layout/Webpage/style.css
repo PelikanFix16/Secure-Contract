@@ -2,60 +2,30 @@
     display: grid
 }
 
-.person {
-    background: #07add6;
-    float: left;
-    width: 220px;
-    height: 200px;
-    margin: 20px;
-}
+.GetContract{
 
-
-.person h1 {
-    text-align:center;
-}
-
-#btn {
-
-    position: absolute;
-    top: 400px;
+    position:absolute;
+    top:10%;
+    left:0.5%;
 
 }
 
-#text_input{
+p{
 
-    position: absolute;
-    top: 400px;
-    left: 100px;
+    display:inline;
 }
 
-#selected{
+#para{
 
-    position: absolute;
-    top:300px;
-    left:10px;
+    position:absolute;
+    top:12%;
+    left:10%;
 }
 
-#address{
+.AcceptContract{
 
-    position: absolute;
-    top:340px;
-    left:10px;
-
-}
-#number_input{
-
-    position: absolute;
-    top: 450px;
-    left: 100px;
+    position:absolute;
+    top:20%;
 
 }
 
-#tokens{
-
-    position: absolute;
-    top: 440px;
-    left:10px;
-
-
-}

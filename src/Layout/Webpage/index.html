@@ -20,11 +20,39 @@
         <div id="container">
 
 
-            <input type="button" class="btn" value="Create Contract"/>
-            Data: <input type="text" name="data" class="data">
-            Tokens: <input type="number" name="tokens" class="tokens">
-            Sender: <input type="text" name="creator" class="creator">
+           
+            <div id="inputsData">
 
+                <button id="CreateBtn">Create Contract</button>
+                
+                Data: <input type="text" class="inputData" id="inData" />
+                Tokens: <input type="text" class="inputData" id="inTokens"/>
+                Recipient: <input type="text" class="inputData" id="inRecipient"/>
+                Creator: <input type="text" class="inputData" id="inCreator"/>
+            </div>
+
+
+            <div id="infoData">
+                <button id="DataBtn">Get Data Contract</button>
+                Data:<p class="infoData" id="iData"></p>
+                Tokens:<p class="infoData" id="iTokens"></p>
+                Recipient<p class="infoData" id="iRecipient"></p>
+                Creator:<p class="infoData" id="iCreator"></p>
+                CreatorAccepted:<p class="infoData" id="iCreatorAccepted"></p>
+                RecipientAccepted:<p class="infoData" id="iRecipientAccepted"></p>
+                CreatorRejected: <p class="infoData" id="iCreatorRejected"></p>
+                RecipientRejected: <p class="infoData" id="iRecipientRejected"></p>
+
+                
+            </div>
+            <button id="acceptContract">Accept Contract</button>
+            Address who accept: <input type="text" id="inputAddressAccpeted"/>
+
+            <button id="showBallance">Get Tokens</button>
+            Get Tokens Balance for account: <input type="text" id="balanceAddres"/>
+            
+            <button id="rejectContract">Reject Contract</button>
+            Address Reject: <input type="text" id="inputAddressRejected">
 
 
         </div>
