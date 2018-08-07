@@ -1,4 +1,5 @@
 
+
 pragma solidity ^0.4.4;
 
 import "./ERC223_receiving_contract.sol";
@@ -27,51 +28,92 @@ contract TradeCenter is ERC223ReceivingContract{
 
     
 
-    mapping(address => uint) private _contractsIndex;
+    //mapping(address => uint) private _contractsIndex;
+    //mapping(uint => Contract) private _contracts;
+    
+    mapping(address => uint[]) private _contractsIndex;
     mapping(uint => Contract) private _contracts;
-    uint private _index = 0;
-
+    uint private _current = 0;
+    
     SafeCoin private _safecoin;
 
 
-    address temp;
 
     function TradeCenter(address _safe) public{
         _safecoin = SafeCoin(_safe);
 
-        temp = _safe;
 
     }
 
-    function getTempAddr() public view returns(address){
-        return temp;
-
-    }
 
 
     function tokenFallback(address _from, uint _value, bytes _data) public {
 
-        _contractsIndex[_from] = _index;
-        _contracts[_index] = Contract(_from,address(0),_value,_value,_data,false,false,false,false);
-        _index++;
+        _contractsIndex[_from].push(_current);
+        _contracts[_current] = Contract(_from,address(0),_value,_value,_data,false,false,false,false);
+        _current++;
+    
+    }
+
+    function checkIndexAvailable(address _sender,uint _index) private view returns(bool) {
+        uint _listIndexLength = _contractsIndex[_sender].length;
+        if(_listIndexLength == 0){
+            return false;
+        }
+
+        for(uint i=0;i<_listIndexLength;i++){
+            if(_contractsIndex[_sender][i] == _index){
+                return true;
+            }
+        }
+        return false;
+        
+    }
+
+    function contractAvailable(uint _index) public view returns(bool){
+        
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+
+        require(contr.from != address(0));
+        require(contr.to != address(0));
+
+        if(contr.historyTokens>0){
+            return true;
+        }
+        return false;
+
 
     }
 
 
-    function addRecipient(address _recipient) public {
+    function getAvailableIndex() public view returns(uint[]) {
+        return _contractsIndex[msg.sender];
+    }
+
+
+    function addRecipient(address _recipient,uint _index) public {
         
-        Contract storage contr = _contracts[_contractsIndex[msg.sender]];
-        
+        //  #1 Dodanie odbiorcy pod pierwszy kontrakt ktory go nie posiada
+        //  #2 Reczne wybranie konraktu ktory ma miec danego odbiorce
+        //  #3 Zmiana interfejsu z tokenFallbackiem aby dodatkowo przyjmowal address odbiorcy
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract storage contr = _contracts[_contractsIndex[msg.sender][_index]];
+
         require(_recipient != address(0));
         require(_recipient != contr.from);
         require(contr.from != address(0));
         contr.to = _recipient;
-        _contractsIndex[_recipient] = _contractsIndex[msg.sender];
+        _contractsIndex[_recipient].push(_contractsIndex[msg.sender][_index]);
     }
 
-    function acceptContract() public returns(bool){
-    
-        Contract storage contr = _contracts[_contractsIndex[msg.sender]];
+    function acceptContract(uint _index) public returns(bool){
+        
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract storage contr = _contracts[_contractsIndex[msg.sender][_index]];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -100,8 +142,11 @@ contract TradeCenter is ERC223ReceivingContract{
         
     }
 
-    function rejectContract() public returns(bool){
-        Contract storage contr = _contracts[_contractsIndex[msg.sender]];
+    function rejectContract(uint _index) public returns(bool){
+        
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract storage contr = _contracts[_contractsIndex[msg.sender][_index]];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -128,8 +173,11 @@ contract TradeCenter is ERC223ReceivingContract{
 
     }
 
-    function getReject() public view returns(bool){
-        Contract memory contr = _contracts[_contractsIndex[msg.sender]];
+    function getReject(uint _index) public view returns(bool){
+        
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -144,9 +192,11 @@ contract TradeCenter is ERC223ReceivingContract{
 
     }
 
-    function getAcceptation() public view returns(bool){
+    function getAcceptation(uint _index) public view returns(bool){
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender]];
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -162,9 +212,12 @@ contract TradeCenter is ERC223ReceivingContract{
 
     }
 
-    function getData() public view returns(bytes){
+    function getData(uint _index) public view returns(bytes){
         
-        Contract memory contr = _contracts[_contractsIndex[msg.sender]];
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+
         require(contr.from != address(0));
         require(contr.to != address(0));
 
@@ -172,9 +225,11 @@ contract TradeCenter is ERC223ReceivingContract{
 
     }
 
-    function getTokens() public view returns(uint){
-        
-        Contract memory contr = _contracts[_contractsIndex[msg.sender]];
+    function getTokens(uint _index) public view returns(uint){
+
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
         require(contr.from != address(0));
         require(contr.to != address(0));
 
@@ -182,7 +237,32 @@ contract TradeCenter is ERC223ReceivingContract{
 
     }
 
+    function getCreator(uint _index) public view returns(address){
+        
+        require(checkIndexAvailable(msg.sender,_index));
 
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+      
+        require(contr.from != address(0));
+        require(contr.to != address(0));
+
+        return contr.from;
+    }
+
+    
+
+
+    function getRecipient(uint _index) public view returns(address){
+        
+        require(checkIndexAvailable(msg.sender,_index));
+
+        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+      
+        require(contr.from != address(0));
+        require(contr.to != address(0));
+
+        return contr.to;
+    }
 
 
 

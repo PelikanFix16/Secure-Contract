@@ -1,0 +1,4 @@
+#! /bin/bash
+
+../geth --datadir . --rpc --networkid=1994 --rpccorsdomain=* --rpcapi="db,eth,net,web3,personal,web3" --preload="miner.js" console
+

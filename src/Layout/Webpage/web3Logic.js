@@ -1,8 +1,8 @@
 
-const SafeCoinAddress = "0xc580618a5374d5fb0b269ea8fddd1205c4aceb15";
-const tradecenterAddress = "0xee3d6361020db19ae07a4a2b418178c974cf8fb3";
+const SafeCoinAddress = "0x5f805e9e3916ee9f71ee7e6afb81d802215f2753";
+const tradecenterAddress = "0x566095a1fac3907d6b811ca2cc4968c2efccb293";
 
-
+/*
 function isAccountLocked(account) {
     try {
         web3.eth.sendTransaction({
@@ -23,6 +23,7 @@ async function waitFor(hash){
         waitFor(hash);
     }
 }
+*/
 
 async function createContract(tokens,data,sender) {
 
@@ -43,12 +44,84 @@ async function createContract(tokens,data,sender) {
     }
 
     let gasCost = await tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,web3.toWei(tokens,"ether"),web3.fromAscii(data));
-
+    console.log(gasCost);
     let hashT =  await tokenContract.transfer['address,uint256,bytes'].sendTransaction(tradecenterAddress,web3.toWei(tokens,"ether"),web3.fromAscii(data),{from:sender,gas:gasCost});
-
+    console.log(hashT);
     return hashT;
 }
 
+
+function getContract(_index,_adr) {
+
+    if(!Number.isInteger(_index)){
+        return false;
+    }
+    if(!web3.isAddress(_adr)){
+        return false;
+    }
+
+    let creator = tradeCenter.getCreator.call(_index,{from:_adr});
+    let recipient = tradeCenter.getRecipient.call(_index,{from:_adr});
+    let tokens = web3.fromWei(tradeCenter.getTokens.call(_index,{from:_adr}),"ether");
+    let data = web3.toAscii(tradeCenter.getData.call(_index,{from:_adr}));
+    let creatorAcceptation = tradeCenter.getAcceptation.call(_index,{from:creator});
+    let recipientAcceptation = tradeCenter.getAcceptation.call(_index,{from:recipient});
+    let creatorReject = tradeCenter.getReject.call(_index,{from:creator});
+    let recipientReject = tradeCenter.getReject.call(_index,{from:recipient});
+
+    return {contractCreator:creator,contractRecipient:recipient,contractTokens:tokens,contractData:data,contractCreatorAccepted:creatorAcceptation,contractRecipientAccepted:recipientAcceptation,
+            contractCreatorRejected:creatorReject,contractRecipientreject:recipientReject};
+
+}
+
+async function unlockAccount(adr,pass) {
+
+    if(!web3.isAddress(adr)){
+        return false;
+    }
+
+   return await web3.personal.unlockAccount(adr,pass,1);
+}
+
+async function addRecipient(index,adr1,adr2) {
+     if(!web3.isAddress(adr1)){
+        return false;
+     }
+    if(!web3.isAddress(adr2)){
+    return false;
+    }
+
+    let gasC = tradeCenter.addRecipient.estimateGas(adr1,index,{from:adr2});
+    console.log(gasC);
+    let hashT = tradeCenter.addRecipient.sendTransaction(adr1,index,{from:adr2,gas:gasC});
+    console.log(hashT);
+}
+
+async function acceptContract(index,adr){
+    if(!web3.isAddress(adr)){
+        return false;
+    }
+
+    let gasC = await tradeCenter.acceptContract.estimateGas(index,{from:adr});
+    console.log(gasC);
+    let s = await tradeCenter.acceptContract.sendTransaction(index,{from:adr,gas:gasC});
+    console.log(s);
+
+}
+
+async function rejectContract(index,adr){
+
+    if(!web3.isAddress(adr)){
+        return false;
+    }
+
+    let gasC = await tradeCenter.rejectContract.estimateGas(index,{from:adr});
+    console.log(gasC);
+    let s = await tradeCenter.rejectContract.sendTransaction(index,{from:adr,gas:gasC});
+    console.log(s);
+}
+
+    /*
 function getAcceptation(adr) {
 
     if(!web3.isAddress(adr)){
@@ -127,7 +200,7 @@ async function getTokens(adr){
     return web3.fromWei(tradeCenter.getTokens({from:adr}),"ether");
 }
 
-
+*/
 
 if(typeof web3 !== 'undefined'){
 
@@ -442,20 +515,6 @@ if(typeof web3 !== 'undefined'){
       "type": "constructor"
     },
     {
-      "constant": true,
-      "inputs": [],
-      "name": "getTempAddr",
-      "outputs": [
-        {
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "constant": false,
       "inputs": [
         {
@@ -478,11 +537,48 @@ if(typeof web3 !== 'undefined'){
       "type": "function"
     },
     {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "contractAvailable",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getAvailableIndex",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "constant": false,
       "inputs": [
         {
           "name": "_recipient",
           "type": "address"
+        },
+        {
+          "name": "_index",
+          "type": "uint256"
         }
       ],
       "name": "addRecipient",
@@ -493,7 +589,12 @@ if(typeof web3 !== 'undefined'){
     },
     {
       "constant": false,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
       "name": "acceptContract",
       "outputs": [
         {
@@ -507,7 +608,12 @@ if(typeof web3 !== 'undefined'){
     },
     {
       "constant": false,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
       "name": "rejectContract",
       "outputs": [
         {
@@ -521,7 +627,12 @@ if(typeof web3 !== 'undefined'){
     },
     {
       "constant": true,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
       "name": "getReject",
       "outputs": [
         {
@@ -535,7 +646,12 @@ if(typeof web3 !== 'undefined'){
     },
     {
       "constant": true,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
       "name": "getAcceptation",
       "outputs": [
         {
@@ -549,7 +665,12 @@ if(typeof web3 !== 'undefined'){
     },
     {
       "constant": true,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
       "name": "getData",
       "outputs": [
         {
@@ -563,12 +684,55 @@ if(typeof web3 !== 'undefined'){
     },
     {
       "constant": true,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
       "name": "getTokens",
       "outputs": [
         {
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCreator",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRecipient",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
         }
       ],
       "payable": false,
@@ -584,7 +748,28 @@ if(typeof web3 !== 'undefined'){
 
     var account1 = web3.eth.accounts[1];
 
-   var hash = 0;
+    unlockAccount(account0,'test');
+    unlockAccount(account1,'test1');
+
+// createContract(20,"test kontrakt",account1);
+
+//addRecipient(2,account0,account1);
+//console.log(getContract(1,account0));
+
+//console.log(tradeCenter.getAvailableIndex({from:account0}));
+
+// acceptContract(0,account0);
+
+console.log(tokenContract.balanceOf.call(account1));
+
+//rejectContract(2,account0);
+
+
+
+
+
+/*
+    var hash = 0;
 
     var stageOne = false;
 
@@ -738,35 +923,5 @@ catch(e){
 
 },5000);
 
-//console.log(hash);
-//console.log(web3.eth.getTransactionReceipt("0xf0593d8a93eba37aa25a48be7f34ae59dca11b49efdd3bbf61562c09734f7f39"));
 
-
-
-//console.log(createContract(200,"test",account0));
-
-
-//console.log(tradeCenter.getTempAddr.call());
-
-
-//console.log(tokenContract.balanceOf.call(account1));
-
-//console.log(addRecipient(account1,account0));
-
-//  console.log(acceptContract(account1));
-
-// console.log(getAcceptation(account1));
-
-
-//console.log(acceptContract(account0));
-
-//console.log(getAcceptation(account0));
-
-
-
-//console.log(tokenContract.balanceOf(tradecenterAddress));
-
-//console.log(getData(account0));
-
-//console.log(tradeCenter.getTokens({from:account0}));
-
+*/

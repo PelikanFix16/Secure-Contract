@@ -6,3 +6,8 @@
  -------------------------
 
 
+Initialize private net:
+cd privateNet
+geth --datadir . init genesis.json
+./start
+
