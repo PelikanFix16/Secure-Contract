@@ -1,8 +1,8 @@
 
-const SafeCoinAddress = "0x5f805e9e3916ee9f71ee7e6afb81d802215f2753";
-const tradecenterAddress = "0x566095a1fac3907d6b811ca2cc4968c2efccb293";
+const SafeCoinAddress = "0x3a040bf210db112c790de861550fc35444be0dd5";
+const tradecenterAddress = "0x3470e94df46d37c82aa74ba06b16b6a65be291b8";
 
-/*
+
 function isAccountLocked(account) {
     try {
         web3.eth.sendTransaction({
@@ -15,7 +15,7 @@ function isAccountLocked(account) {
         return (err.message == "authentication needed: password or unlock");
     }
 }
-
+    /*
 
 async function waitFor(hash){
     let s = await web3.eth.getTransactionReceipt(hash);
@@ -748,180 +748,54 @@ if(typeof web3 !== 'undefined'){
 
     var account1 = web3.eth.accounts[1];
 
-    unlockAccount(account0,'test');
-    unlockAccount(account1,'test1');
+    var count = web3.eth.getTransactionCount(account0);
 
-// createContract(20,"test kontrakt",account1);
+var account2 = "0x883ae23c4cf3d429bdf3b9b145fb629f83323f3c";
 
-//addRecipient(2,account0,account1);
-//console.log(getContract(1,account0));
+//console.log(count);
 
-//console.log(tradeCenter.getAvailableIndex({from:account0}));
+var gasL = tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,200,'0x20',{from:account0});
+console.log(String(gasL).toString('hex'));
 
-// acceptContract(0,account0);
+    var rawTransaction = {
 
-console.log(tokenContract.balanceOf.call(account1));
+        "from": account0,
+        "nonce":"0x"+count.toString(16),
+        "gasLimit": gasL,
+        "to":SafeCoinAddress,
+        "value":"0x0",
+        "data":tokenContract.transfer['address,uint256,bytes'].getData(tradecenterAddress,200,'0x20'),
+        "chainId":1994
 
-//rejectContract(2,account0);
-
-
-
-
-
-/*
-    var hash = 0;
-
-    var stageOne = false;
-
-    var recipient ;
-
-    var creator;
-
-
-    var createContractBtn = document.getElementById("CreateBtn");
-
-    createContractBtn.onclick = () => {
-
-        var DataInput = document.getElementById("inData");
-        var TokensInput = document.getElementById("inTokens");
-        var RecipientInput = document.getElementById("inRecipient");
-        var CreatorInput = document.getElementById("inCreator");
-
-        if(DataInput.value && TokensInput.value && RecipientInput.value && CreatorInput.value){
-
-
-            if(isAccountLocked(CreatorInput.value)){
-               var pass =  prompt("Passowrd to unlock account "+CreatorInput.value);
-
-                unlockAccount(CreatorInput.value,pass).then(function(res){
-                    if(res == true){
-                hash = createContract(Number(TokensInput.value),DataInput.value,CreatorInput.value);
-                    }
-                });
-
-            }
-
-            // hash = createContract(Number(TokensInput.value),DataInput.value,CreatorInput.value);
-
-            recipient = RecipientInput.value;
-
-            creator = CreatorInput.value;
-        }
     };
 
 
-var GetDataButton = document.getElementById("DataBtn");
-
-GetDataButton.onclick = () => {
-
-    var infoData = document.getElementById("iData");
-    var infoTokens = document.getElementById("iTokens");
-    var infoRecipient = document.getElementById("iRecipient");
-    var infoCreator = document.getElementById("iCreator");
-    var infoCreatorAccepted = document.getElementById("iCreatorAccepted");
-    var infoRecipientAccepted = document.getElementById("iRecipientAccepted");
-    var infoCreatorRejected = document.getElementById("iCreatorRejected");
-    var infoRecipientRejected = document.getElementById("iRecipientRejected");
-
-    infoData.innerHTML = getData(creator);
-    infoTokens.innerHTML = web3.fromWei(tradeCenter.getTokens({from:creator}),"ether")
-    infoRecipient.innerHTML = recipient;
-    infoCreator.innerHTML = creator;
-    infoCreatorAccepted.innerHTML = getAcceptation(creator);
-    infoRecipientAccepted.innerHTML = getAcceptation(recipient);
-    infoCreatorRejected.innerHTML = getRejected(creator);
-    infoRecipientRejected.innerHTML = getRejected(recipient);
-};
-
-var acceptContract = document.getElementById("acceptContract");
-
-acceptContract.onclick = () => {
-
-    var acceptedAddress = document.getElementById("inputAddressAccpeted");
-
-    if(!web3.isAddress(acceptedAddress.value)){
-        console.log("bad address");
-    }
-         if(isAccountLocked(acceptedAddress.value)){
-               var pass =  prompt("Passowrd to unlock account "+acceptedAddress.value);
-
-                unlockAccount(acceptedAddress.value,pass).then(function(res){
-                    if(res == true){
-                           let gasC =  tradeCenter.acceptContract.estimateGas({from:acceptedAddress.value});
-                            console.log(gasC);
-                                    let s =  tradeCenter.acceptContract.sendTransaction({from:acceptedAddress.value,gas:gasC});
-                                    console.log(s);
-                    }
+var tx = new window.ethereumjs.Tx(rawTransaction);
 
 
-                });
+console.log( Buffer.Buffer.from('0x6a6b2703ea413be70efcdb44b7d046ec2e166981556b1a2eeda0f180e506aee9','hex'));
 
-            }
-};
-
-var balanceBtn = document.getElementById("showBallance");
-
-balanceBtn.onclick = () => {
-
-    var balanceAdr = document.getElementById("balanceAddres");
-    if(!web3.isAddress(balanceAdr.value)){
-        console.log("bad address");
-    }
-
-        alert(web3.fromWei(tokenContract.balanceOf.call(balanceAdr.value),"ether"));
-};
-
-function stageTwo(){
-
-    if(isAccountLocked(creator)){
-       var pass =  prompt("Passowrd to unlock account "+creator);
-
-        unlockAccount(creator,pass).then(function(res){
-            if(res == true){
-                hash = addRecipient(recipient,creator);
-            }
-        });
-
-    }
-}
-
-var rejectBtn = document.getElementById("rejectContract");
-
-rejectBtn.onclick = () => {
-
-    var rejectedAddress = document.getElementById("inputAddressRejected");
-    if(!web3.isAddress(rejectedAddress.value)){
-        console.log("bad address");
-    }
-        if(isAccountLocked(rejectedAddress.value)){
-            var pass = prompt("Password to unlock account "+rejectedAddress.value);
-            unlockAccount(rejectedAddress.value,pass).then(function(res){
-                if(res == true){
-                    rejectContract(rejectedAddress.value);
-                }
-            });
-        }
-
-};
+var privat = '0x6a6b2703ea413be70efcdb44b7d046ec2e166981556b1a2eeda0f180e506aee9';
 
 
+buf = Buffer.Buffer.from('6a6b2703ea413be70efcdb44b7d046ec2e166981556b1a2eeda0f180e506aee9','hex');
+
+console.log(buf);
+
+tx.sign(buf);
 
 
-setInterval(function(){
-try{
-hash.then(function(result){
-    if(web3.eth.getTransactionReceipt(result)){
-        console.log("Accepted");
-        hash = 0;
-        stageTwo();
-    }
+console.log(web3.eth);
+var serializedTx = tx.serialize();
+
+//var receipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+
+
+console.log(tokenContract.balanceOf(account2));
+
+web3.eth.getGasPrice(function(e,r){
+
+    console.log(r/10**9);
 });
-}
-catch(e){
-    console.log("waiting for transaction");
-}
 
-},5000);
-
-
-*/
+console.log(web3.eth.getBlock('latest').gasLimit);

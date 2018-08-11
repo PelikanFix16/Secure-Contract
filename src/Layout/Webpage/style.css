@@ -1,31 +1,191 @@
-.container{
-    display: grid
+body, html {
+    background-image: url("background.jpg");
+
+    /* Full height */
+
+
+    /* Center and scale the image nicely */
+   background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+ height: 100vh;
+ font-size:12px;
 }
 
-.GetContract{
+p {
+font: 20px arial, sans-serif;
+color:#ffffff;
+font-weight: bold;
+}
 
-    position:absolute;
-    top:10%;
-    left:0.5%;
+input{
+  border-radius: 25px;
+    border: 2px solid #399bb6;
+    padding: 20px; 
+    width: 200px;
+    height: 15px;  
+}
+
+.vertical-center{
+
+    padding-top:3%;
 
 }
 
-p{
 
-    display:inline;
-}
+#RegisterContainer{
 
-#para{
+    padding-bottom:8%;
 
-    position:absolute;
-    top:12%;
-    left:10%;
-}
-
-.AcceptContract{
-
-    position:absolute;
-    top:20%;
 
 }
 
+
+
+@media screen and (min-height: 1800px) {
+
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:2.2%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:24px;
+    }
+
+
+}
+
+
+@media screen and (max-height: 1799px) {
+
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:2.2%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:17px;
+    }
+
+
+}
+
+@media screen and (max-height: 1366px) {
+
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:2.2%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:24px;
+    }
+
+
+}
+
+
+@media screen and (max-height: 812px) {
+
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:3.5%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:12px;
+    }
+
+
+}
+
+@media screen and (max-height: 700px) {
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:4.5%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:12px;
+    }
+}
+@media screen and (max-height: 400px) {
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:7%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:12px;
+    }
+}
+
+
+
+@media screen and (max-width: 400px) {
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:2%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:12px;
+    }
+}

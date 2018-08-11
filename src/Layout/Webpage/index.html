@@ -7,63 +7,53 @@
     <head>
         
         <meta charset="UTF-8">
-        <script src="./node_modules/web3/dist/web3.min.js"></script>
         <link rel="stylesheet" type="text/css" href="style.css">
         
 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     </head>
 
 
     <body>
 
-        <div id="container">
-
+    <div class="vertical-center">
+        
+            <div class="form-group text-center">
+                <div class="input-group" style="margin:auto;" id="RegisterContainer">
+                <button type="button"  class="btn" id="Register">Register</button>
+                </div>
+        
+        <div class="container">
 
            
-            <div id="inputsData">
+        
 
-                <button id="CreateBtn">Create Contract</button>
-                
-                Data: <input type="text" class="inputData" id="inData" />
-                Tokens: <input type="text" class="inputData" id="inTokens"/>
-                Recipient: <input type="text" class="inputData" id="inRecipient"/>
-                Creator: <input type="text" class="inputData" id="inCreator"/>
-            </div>
-
-
-            <div id="infoData">
-                <button id="DataBtn">Get Data Contract</button>
-                Data:<p class="infoData" id="iData"></p>
-                Tokens:<p class="infoData" id="iTokens"></p>
-                Recipient<p class="infoData" id="iRecipient"></p>
-                Creator:<p class="infoData" id="iCreator"></p>
-                CreatorAccepted:<p class="infoData" id="iCreatorAccepted"></p>
-                RecipientAccepted:<p class="infoData" id="iRecipientAccepted"></p>
-                CreatorRejected: <p class="infoData" id="iCreatorRejected"></p>
-                RecipientRejected: <p class="infoData" id="iRecipientRejected"></p>
-
-                
-            </div>
-            <button id="acceptContract">Accept Contract</button>
-            Address who accept: <input type="text" id="inputAddressAccpeted"/>
-
-            <button id="showBallance">Get Tokens</button>
-            Get Tokens Balance for account: <input type="text" id="balanceAddres"/>
+            <p id="Login" class="text-center">Address</p>
             
-            <button id="rejectContract">Reject Contract</button>
-            Address Reject: <input type="text" id="inputAddressRejected">
+            <div class="form-group text-center">
+                <div class="input-group" style="margin:auto;">
+                    <input type="text" id="LoginInput">
+                </div>
 
+            </div>
+
+            <div style="padding-top:4%;" class="form-group text-center">
+                <div class="input-group" style="margin:auto;">
+                <button type="button"  class="btn btn-primary btn-block" id="LoginBtn">Visit Future</button>
+                </div>
+
+            </div>
 
         </div>
-
-
+    </div>
 
     </body>
    
 
-    <script src="./web3Logic.js"></script>
+    <script src="./main.js"></script>
     
-
 
 </html>
