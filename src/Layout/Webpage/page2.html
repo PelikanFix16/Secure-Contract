@@ -8,42 +8,176 @@
         <script src="./node_modules/web3/dist/web3.min.js" type="text/javascript"></script>
         <script src="./node_modules/dist/ethereumjs-tx/ethereumjs-tx-1.3.3.min.js" type="text/javascript"></script>
         <script src="./node_modules/buffer/bundle.js" type="text/javascript"></script>
-        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="style2.css">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <script src="./node_modules/dist/keythereum.min.js" type="text/javascript"></script>
+        <script type='text/javascript'>
+            var fileOb = "";
+            var address = "";
+        </script>
     </head>
 
     <body>
 
-        <div class="container">
-
-
-            <div id="contract">
-
-
-            </div>
-
-            <div id="ContractTable">
-
-            <table style="width:100%">
-              <tr>
-
-                  <p>fs</p>
-                  <p>fs</p>
-
-              </tr>
-            </table>
-
-            </div>
-
+        <div class="topnav" id="navtop">
+            <p>Address: </p>
+            <p id="addressProfile"></p>
+            <p>Tokens: </p>
+            <p id="tokensProfile"></p>
+            <p>Eth: </p>
+            <p id="ethProfile"></p>
 
 
         </div>
 
+        <div class="all1" id="allPage">
+            
+
+            <div class="Info" id="info">
+
+                <p> Some info about srvice</p>
+
+                <div id="CloseInfo" class="classInfo">
+                  <p  id="close" class="classClose">Close</p>
+
+                </div>
+            </div>
+
+                <div class="Info" id="info2">
+                    <p> Some info about key </p>
+                    <div id="CloseInfo2" class="classInfo">
+                        <p id="close2" class="classClose">Close</p>
+                    </div>
+                </div>
+
+
+        <div class="container1" id="main">
+
+        <div id="mySidenav" class="sidenav">
+        </div>
+            
+
+            <div class="container2" onclick="myFunction(this)" id="btn">
+              <div class="bar1"></div>
+              <div class="bar2"></div>
+              <div class="bar3"></div>
 
 
 
+                </div>
+
+
+
+            </div>
+
+            <div class="banner" id="ban">
+
+                <p class="text-center" id="Welcome">Welcome In Future</p>
+                <img src="sample.jpeg" height="50%" width="100%">
+                <div id="LogoBaner" class="LogoBaner1">
+                    <p class="Logo1" id="Logo" >About<br> Safe Contract Service</p>
+
+                </div>
+
+            </div>
+
+            <div class="text-center" id="keyAdd">
+                <input type="file" id="file-input" class="form-contraol-file">
+
+                <div id="upload">
+                        
+               
+                    <p id="textup" class="text-center"> Upload File </p>
+                </div>
+
+                <div id="LogoBanerKey" class="LogoBaner1">
+                    <p class="Logo1" id="LogoKey"> About <br> Key File </p>  
+                </div>
+               
+            </div>
+
+
+            <div class="contracts" id="Contracts">
+                
+
+                <div class="container" >
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+
+                            <p class="text-center">Safe Contract</p>
+
+
+
+                            <p id="Creator">Creator:</p>
+                            <p id="Recipient">Recipient:</p>
+                            <p id="Tokens:">Value:</p>
+                            <p id="Data">Info:</p>
+                            
+
+                            <div id="CreatorInfo">
+
+
+                                <p id="CreatorInfoAce">Creator Accepted</p>
+                                <div id="CreatorInfoAceLed" class="led"></div>
+
+                                <p id="CreatorInfoRej">Creator Rejected</p>
+                                <div id="CreatorInfoRejLed" class="led"></div>
+
+
+                            </div>
+
+
+                            <div id="RecipientInfo">
+
+
+                                <p id="RecipientInfoAce">Recipient Accepted</p>
+                                <div id="RecipientInfoAceLed" class="led"></div>
+
+                                <p id="RecipientInfoRej">Recipient Rejected</p>
+                                <div id="RecipientInfoRejLed" class="led"></div>
+
+
+                            </div>
+
+                            <div class="btnContract">
+
+                                <button id="AcceptContract" >Accept</button>
+
+                                <button id="RejectContract">Reject</button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <p class="text-center"> Current </p>
+
+                        </div>
+                        <div class="col-md-4">
+
+
+                            <p class="text-center"> History </p>
+
+                        </div>
+                    </div>
+
+                </div>
+                    
+
+            </div>
+
+
+            </div>
 
     </body>
 
+    <script src="./page2.js"></script>
     <script src="./web3Logic.js"></script>
 
 </html>

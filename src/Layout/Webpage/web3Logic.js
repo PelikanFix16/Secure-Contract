@@ -748,7 +748,7 @@ if(typeof web3 !== 'undefined'){
 
     var account1 = web3.eth.accounts[1];
 
-    var count = web3.eth.getTransactionCount(account0);
+/*   var count = web3.eth.getTransactionCount(account0);
 
 var account2 = "0x883ae23c4cf3d429bdf3b9b145fb629f83323f3c";
 
@@ -798,4 +798,32 @@ web3.eth.getGasPrice(function(e,r){
     console.log(r/10**9);
 });
 
-console.log(web3.eth.getBlock('latest').gasLimit);
+console.log(web3.eth.getBlock('latest').gasLimit);*/
+
+
+var adr = document.getElementById("addressProfile");
+var tok = document.getElementById("tokensProfile");
+var eth = document.getElementById("ethProfile");
+address = address.replace("#","");
+
+window.onload = function(){
+
+
+
+    adr.innerHTML = address;
+
+    tok.innerHTML = web3.fromWei(tokenContract.balanceOf.call(address),"ether");
+    eth.innerHTML = web3.fromWei(web3.eth.getBalance(address));
+
+};
+
+setInterval(function(){
+
+
+    tok.innerHTML = web3.fromWei(tokenContract.balanceOf.call(address),"ether");
+    eth.innerHTML = web3.fromWei(web3.eth.getBalance(address));
+
+
+
+},3000)
+

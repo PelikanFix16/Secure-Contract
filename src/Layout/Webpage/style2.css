@@ -1,0 +1,389 @@
+
+
+.all1 {
+
+    display:flex;
+
+    height:100%;
+}
+
+.container1 { 
+
+    width:12%;
+
+}
+
+body { 
+
+    background-color:#f2f2f2;
+
+    overflow:auto;
+    min-height:100%;
+    display:block;
+}
+html {
+
+    overflow:auto;
+
+}
+
+
+.container2 {
+    display: inline-block;
+    cursor: pointer;
+    padding:10px;
+}
+
+.bar1, .bar2, .bar3 {
+    width: 35px;
+    height: 5px;
+    background-color: #333;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+
+
+
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
+}
+
+.change .bar2 {opacity: 0;}
+
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+}
+
+
+.options {
+
+    color:white;
+
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+.sidenav a {
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    padding:4%;
+    
+}
+
+
+
+.sidenav a:hover {
+    color: white;
+}
+
+
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    font-size: 36px;
+}
+
+.banner {
+
+
+    margin:auto;
+    width:50%;
+    padding:10px;
+    height:100%;
+    display:none;
+}
+
+.Key {
+
+
+}
+
+#Welcome {
+
+    font-weight:bold;
+}
+
+.Logo1 {
+
+    font-size:15px;
+
+    text-align:center;
+}
+
+.classClose {
+
+    color:white;
+    font-size:20px;
+    text-align:center;
+}
+
+.LogoBaner1 {
+
+    border-radius:20px;
+    background-color:	#c0c5ce;
+    position:fixed;
+    bottom:0;
+    width:50%;
+}
+
+.Info {
+
+    width:100%;
+    height:100%;
+    background-color:#eee;
+    position:fixed;
+    z-index:1;
+
+    overflow-y:scroll;
+
+}
+
+.classInfo{
+
+    background-color: #353839;
+
+    position:fixed;
+    top:97%;
+    width:100%;
+
+
+}
+
+#file-input {
+
+    display:none;
+}
+
+#upload {
+    color:white;
+    text-align:center;
+}
+
+
+#keyAdd {
+
+    width:50%;
+    height:25%;
+    background-color:#353839;
+    margin-top:0.5%;
+    margin-left:20%;
+    display:none;
+}
+
+#SafeContract { 
+
+
+
+    height:30%;
+    width:40%;
+    margin-left:10%;
+    border-color:#e6e6e6;
+    padding:20px;
+}
+
+
+#CurentContracts { 
+
+    width:33%;
+    height:100%;
+
+    border-color:#e6e6e6;
+    overflow-y:scroll;
+    padding:20px;
+}
+
+#HistoryContracts {
+
+    width:33%;
+    height:100%;
+    overflow-y:scroll;
+    border-color:#e6e6e6;
+    padding:20px;
+}
+
+
+.contracts { 
+
+    display:none;
+}
+
+@media screen and (min-width:1024px) {
+
+    #Welcome {
+
+        font-size:25px;
+    }
+    .topnav p {
+        font-size:20px;
+    }
+
+}
+
+@media screen and (max-width:1023px) {
+
+    #Welcome {
+        font-size:15px;
+
+    }
+    .topnav p {
+        font-size:8px;
+    }
+
+    .minimalShow {
+        font-size:15px;
+        height:60px;
+    }
+}
+
+.conView {
+
+
+    background-color:#d9d9d9;
+    width:100%;
+    height:4%;
+
+}
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+  height:20px;
+}
+
+.topnav p {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  margin-left:2%;
+  margin-top:0.5%;
+}
+
+.minimalShow {
+
+    width:100%;
+    background-color:#828282;
+
+    border-radius:10px;
+   
+}
+
+
+.PersonSatus {
+
+}
+
+.PersonSatus1 {
+    
+
+
+}
+
+.btnContract {
+
+    display:flex;
+
+}
+
+.btnContract button{ 
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+
+    position:absolute;
+
+    top:80%;
+
+}
+
+
+#AcceptContract {
+
+background-color: #4CAF50;
+
+}
+
+
+#RejectContract {
+background-color: #f44336;
+
+
+}
+
+.container {
+
+    width:100%;
+
+}
+.col-md-4 {
+
+    overflow-y:scroll;
+
+    width:100%;
+
+
+}
+
+#CreatorInfo {
+
+    display:inline-flex;
+    width:100%;
+    position:absolute;
+
+}
+
+.led {
+
+    width:20px;
+    height:20px;
+    background-color:red;
+
+    margin-left:20px;
+
+    border-radius:100%;
+
+}
+
+#CreatorInfoRej {
+
+   margin-left:30px;
+
+
+}
+#RecipientInfo {
+
+    width:100%;
+    position:absolute;
+    margin-top:50px;
+    display:inline-flex;
+
+}
+
+#RecipientInfoRej {
+
+   margin-left:30px;
+
+
+}
+

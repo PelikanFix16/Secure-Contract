@@ -1,5 +1,4 @@
 body, html {
-    background-image: url("background.jpg");
 
     /* Full height */
 
@@ -30,6 +29,8 @@ input{
 
     padding-top:3%;
 
+    background-color:#0F0F0F;
+    height:100%;
 }
 
 
@@ -39,6 +40,7 @@ input{
 
 
 }
+
 
 
 
@@ -58,7 +60,7 @@ input{
 
         text-align:center;
 
-        font-size:24px;
+        font-size:29px;
     }
 
 
@@ -81,7 +83,7 @@ input{
 
         text-align:center;
 
-        font-size:17px;
+        font-size:20px;
     }
 
 
@@ -103,7 +105,7 @@ input{
 
         text-align:center;
 
-        font-size:24px;
+        font-size:20px;
     }
 
 
@@ -170,6 +172,28 @@ input{
 }
 
 
+@media screen and (max-width:900px) {
+
+    #alertBox{
+        position:absolute;
+        background-color: #ff6666;
+        visibility: hidden;
+        width:100%;
+        top:90%;
+        height:2%;
+    }
+
+    #alertText { 
+
+
+        text-align:center;
+
+        font-size:10px;
+    }
+
+
+}
+
 
 @media screen and (max-width: 400px) {
     #alertBox{
@@ -186,6 +210,20 @@ input{
 
         text-align:center;
 
-        font-size:12px;
+        font-size:9px;
     }
 }
+
+#LoginShow {
+
+    display:block;
+    margin:5%;
+}
+
+#RegisterShow {
+
+    display:none;
+    margin:5%;
+}
+
+
