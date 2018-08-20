@@ -317,6 +317,22 @@ html {
 
 }
 
+#CreateContractBtn { 
+
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    position:absolute;
+
+    background-color:#65737e;
+}
+
 
 #AcceptContract {
 
@@ -387,3 +403,30 @@ background-color: #f44336;
 
 }
 
+.smallView {
+
+
+    width:100%;
+    background-color:#d9d9d9;
+    height:50px;
+    margin:1%;
+    margin-bottom:5%;
+    font-size:15px;
+
+}
+input {
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: solid;
+    background-color: #f2f2f2;
+    color: white;
+    border-color:white;
+    color:black;
+}
+.noRecipientSet {
+
+    width:100%;
+    background-color:#FFA07A;
+
+
+}

@@ -74,7 +74,7 @@ contract TradeCenter is ERC223ReceivingContract{
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract memory contr = _contracts[_index];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -100,20 +100,20 @@ contract TradeCenter is ERC223ReceivingContract{
         //  #3 Zmiana interfejsu z tokenFallbackiem aby dodatkowo przyjmowal address odbiorcy
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract storage contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract storage contr = _contracts[_index];
 
         require(_recipient != address(0));
         require(_recipient != contr.from);
         require(contr.from != address(0));
         contr.to = _recipient;
-        _contractsIndex[_recipient].push(_contractsIndex[msg.sender][_index]);
+        _contractsIndex[_recipient].push(_index);
     }
 
     function acceptContract(uint _index) public returns(bool){
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract storage contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract storage contr = _contracts[_index];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -146,7 +146,7 @@ contract TradeCenter is ERC223ReceivingContract{
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract storage contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract storage contr = _contracts[_index];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -177,7 +177,7 @@ contract TradeCenter is ERC223ReceivingContract{
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract memory contr = _contracts[_index];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -196,7 +196,7 @@ contract TradeCenter is ERC223ReceivingContract{
 
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract memory contr = _contracts[_index];
 
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -216,10 +216,7 @@ contract TradeCenter is ERC223ReceivingContract{
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
-
-        require(contr.from != address(0));
-        require(contr.to != address(0));
+        Contract memory contr = _contracts[_index];
 
         return contr.data;
 
@@ -229,9 +226,7 @@ contract TradeCenter is ERC223ReceivingContract{
 
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
-        require(contr.from != address(0));
-        require(contr.to != address(0));
+        Contract memory contr = _contracts[_index];
 
         return contr.tokens;
 
@@ -241,7 +236,7 @@ contract TradeCenter is ERC223ReceivingContract{
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract memory contr = _contracts[_index];
       
         require(contr.from != address(0));
         require(contr.to != address(0));
@@ -256,7 +251,7 @@ contract TradeCenter is ERC223ReceivingContract{
         
         require(checkIndexAvailable(msg.sender,_index));
 
-        Contract memory contr = _contracts[_contractsIndex[msg.sender][_index]];
+        Contract memory contr = _contracts[_index];
       
         require(contr.from != address(0));
         require(contr.to != address(0));

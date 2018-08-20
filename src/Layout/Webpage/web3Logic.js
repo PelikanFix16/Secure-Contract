@@ -1,206 +1,274 @@
 
-const SafeCoinAddress = "0x3a040bf210db112c790de861550fc35444be0dd5";
-const tradecenterAddress = "0x3470e94df46d37c82aa74ba06b16b6a65be291b8";
+const SafeCoinAddress = "0xdb261783579e41b6f2ace7a82bb66cf9d596e4c5";
+const tradecenterAddress = "0xcf655dcf9729474ad399206c3ab8b6c4afd826c0";
 
 
-function isAccountLocked(account) {
-    try {
-        web3.eth.sendTransaction({
-            from: account,
-            to: account,
-            value: 0
-        });
-        return false;
-    } catch (err) {
-        return (err.message == "authentication needed: password or unlock");
-    }
-}
-    /*
-
-async function waitFor(hash){
-    let s = await web3.eth.getTransactionReceipt(hash);
-    if(!s){
-        waitFor(hash);
-    }
-}
-*/
-
-async function createContract(tokens,data,sender) {
-
-    if(!web3.isAddress(sender)){
-        console.log("bad address");
-        return false;
-    }
+var currentContractIndex = null;
 
 
-    if(typeof tokens !== 'number'){
-        console.log("bad number");
-        return false;
-    }
-
-    if(typeof data !== 'string'){
-        console.log("bad data");
-        return false;
-    }
-
-    let gasCost = await tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,web3.toWei(tokens,"ether"),web3.fromAscii(data));
-    console.log(gasCost);
-    let hashT =  await tokenContract.transfer['address,uint256,bytes'].sendTransaction(tradecenterAddress,web3.toWei(tokens,"ether"),web3.fromAscii(data),{from:sender,gas:gasCost});
-    console.log(hashT);
-    return hashT;
-}
+function CreateSafeContract(_creator,_uint256,_bytes,_password) {
 
 
-function getContract(_index,_adr) {
 
-    if(!Number.isInteger(_index)){
-        return false;
-    }
-    if(!web3.isAddress(_adr)){
-        return false;
-    }
+        if(fileOb === null){
+            throw "No load file to get private key";
+        }
+        if(!web3.isAddress(_creator)){
+            throw "Parametr is not address";
+        }
+        if(isNaN(_uint256)){
+            throw "Parametr is not number";
+        }
+        if(typeof _bytes !== 'string'){
+            throw "Parametr is not string";
+        }
+        if(typeof _password !== 'string'){
+            throw "Password is not stirng";
+        }
+        if(_bytes == ""){
+            throw "No Info data";
+        }
 
-    let creator = tradeCenter.getCreator.call(_index,{from:_adr});
-    let recipient = tradeCenter.getRecipient.call(_index,{from:_adr});
-    let tokens = web3.fromWei(tradeCenter.getTokens.call(_index,{from:_adr}),"ether");
-    let data = web3.toAscii(tradeCenter.getData.call(_index,{from:_adr}));
-    let creatorAcceptation = tradeCenter.getAcceptation.call(_index,{from:creator});
-    let recipientAcceptation = tradeCenter.getAcceptation.call(_index,{from:recipient});
-    let creatorReject = tradeCenter.getReject.call(_index,{from:creator});
-    let recipientReject = tradeCenter.getReject.call(_index,{from:recipient});
 
-    return {contractCreator:creator,contractRecipient:recipient,contractTokens:tokens,contractData:data,contractCreatorAccepted:creatorAcceptation,contractRecipientAccepted:recipientAcceptation,
-            contractCreatorRejected:creatorReject,contractRecipientreject:recipientReject};
+        creator = _creator;
+        uint256 = web3.toWei(_uint256,'ether');
+        bytes = web3.fromAscii(_bytes);
+        password = _password;
+
+
+        let count = web3.eth.getTransactionCount(creator);
+
+        let gasL = tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,uint256,bytes,{from:creator});
+        let rawTransaction = {
+
+            "from": creator,
+            "nonce":"0x"+count.toString(16),
+            "gasLimit": gasL,
+            "to":SafeCoinAddress,
+            "value":"0x0",
+            "data":tokenContract.transfer['address,uint256,bytes'].getData(tradecenterAddress,uint256,bytes),
+            "chainId":1994
+        };
+
+
+        let tx = new window.ethereumjs.Tx(rawTransaction);
+
+        let privateKey = window.keythereum.recover(password,fileOb);
+        privateKey = privateKey.toString('hex');
+
+        let buf = Buffer.Buffer.from(privateKey,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+
 
 }
 
-async function unlockAccount(adr,pass) {
 
-    if(!web3.isAddress(adr)){
-        return false;
+
+
+class ContractManager {
+
+    constructor(_address){
+
+        if(!web3.isAddress(_address)){
+            throw "Address is incorrect";
+
+        }
+
+        this.mainAddress = _address;
+
     }
 
-   return await web3.personal.unlockAccount(adr,pass,1);
-}
+    get getAllContract() {
 
-async function addRecipient(index,adr1,adr2) {
-     if(!web3.isAddress(adr1)){
-        return false;
+        let contractsIndex = tradeCenter.getAvailableIndex.call({from:this.mainAddress});
+        let arr = [];
+        for(let i=0;i<contractsIndex.length;i++){
+            arr.push(contractsIndex[i].c[0]);
+
+        }
+        return arr;
+    }
+
+    biggestNumber(index) {
+        if(index > Math.max(this.getAllContract)){
+            throw "Index is to big";
+        }
+    }
+
+     getRecipientContract(index) {
+
+         this.biggestNumber(index);
+
+         return tradeCenter.getRecipient.call(index,{from:this.mainAddress});
+
+    }
+
+    isHistory(index) {
+
+        this.biggestNumber(index);
+
+        let recipient = this.getRecipientContract(index);
+
+        if(!web3.isAddress(recipient)){
+            throw "Recipient is not set";
+        }
+            if(tradeCenter.getAcceptation.call(index,{from:this.getCreator(index)}) &&
+                tradeCenter.getAcceptation.call(index,{from:recipient})){
+                return true;
+            }
+            if(tradeCenter.getReject.call(index,{from:this.getCreator(index)}) &&
+                tradeCenter.getReject.call(index,{from:recipient})){
+                return true;
+
+            }
+
+            return false;
+
+
+
+    }
+
+
+
+
+    getTokens(index) {
+        this.biggestNumber(index);
+        return web3.fromWei(tradeCenter.getTokens.call(index,{from:this.mainAddress})).c[0];
+
+    }
+    getData(index) {
+
+        this.biggestNumber(index);
+        return web3.toAscii(tradeCenter.getData.call(index,{from:this.mainAddress}));
+
+    }
+
+    addRecipient(addressRec,index,password) {
+        this.biggestNumber(index);
+        if(!web3.isAddress(addressRec)){
+            throw "Address is inncorect";
+        }
+        let count = web3.eth.getTransactionCount(this.mainAddress);
+        let gasL = tradeCenter.addRecipient.estimateGas(addressRec,index,{from:this.mainAddress});
+        let rawTransaction = {
+            "from":this.mainAddress,
+            "nonce":"0x"+count.toString(16),
+            "gasLimit":gasL,
+            "to":tradecenterAddress,
+            "value":"0x0",
+            "data":tradeCenter.addRecipient.getData(addressRec,index),
+            "chainId":1994
+
+        };
+
+        let tx = new window.ethereumjs.Tx(rawTransaction);
+
+        let privateKey = window.keythereum.recover(password,fileOb);
+        privateKey = privateKey.toString('hex');
+
+        let buf = Buffer.Buffer.from(privateKey,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+
+    }
+
+     getCreator(index) {
+        this.biggestNumber(index);
+        return tradeCenter.getCreator.call(index,{from:this.mainAddress});
      }
-    if(!web3.isAddress(adr2)){
-    return false;
-    }
 
-    let gasC = tradeCenter.addRecipient.estimateGas(adr1,index,{from:adr2});
-    console.log(gasC);
-    let hashT = tradeCenter.addRecipient.sendTransaction(adr1,index,{from:adr2,gas:gasC});
-    console.log(hashT);
-}
+    acceptContract(index) {
 
-async function acceptContract(index,adr){
-    if(!web3.isAddress(adr)){
-        return false;
-    }
+        this.biggestNumber(index);
 
-    let gasC = await tradeCenter.acceptContract.estimateGas(index,{from:adr});
-    console.log(gasC);
-    let s = await tradeCenter.acceptContract.sendTransaction(index,{from:adr,gas:gasC});
-    console.log(s);
+        let count = web3.eth.getTransactionCount(this.mainAddress);
 
-}
-
-async function rejectContract(index,adr){
-
-    if(!web3.isAddress(adr)){
-        return false;
-    }
-
-    let gasC = await tradeCenter.rejectContract.estimateGas(index,{from:adr});
-    console.log(gasC);
-    let s = await tradeCenter.rejectContract.sendTransaction(index,{from:adr,gas:gasC});
-    console.log(s);
-}
-
-    /*
-function getAcceptation(adr) {
-
-    if(!web3.isAddress(adr)){
-        return false;
-    }
-
-    return tradeCenter.getAcceptation.call({from:adr});
-
-
-}
-
-async function rejectContract(adr){
-    if(!web3.isAddress(adr)){
-        return false;
-    }
-    let gasC = await tradeCenter.rejectContract.estimateGas({from:adr});
-    console.log(gasC);
-    let s = await tradeCenter.rejectContract.sendTransaction({from:adr,gas:gasC});
-    console.log(s);
-}
-
-function getRejected(adr){
-    if(!web3.isAddress(adr)){
-        return false;
-    }
-    return tradeCenter.getReject.call({from:adr});
-}
-
-function getData(adr) {
-
-    if(!web3.isAddress(adr)){
-        return false;
 
 
     }
 
-    var data =  tradeCenter.getData.call({from:adr});
-    return web3.toAscii(data);
+    acceptContract(index,password) {
 
-}
 
-async function acceptContract(adr) {
+        this.biggestNumber(index);
 
-    if(!web3.isAddress(adr)){
-        console.log("ta");
-        return false;
+
+        let count = web3.eth.getTransactionCount(this.mainAddress);
+        let gasL = tradeCenter.acceptContract.estimateGas(index,{from:this.mainAddress});
+        let rawTransaction = {
+            "from":this.mainAddress,
+            "nonce":"0x"+count.toString(16),
+            "gasLimit":gasL,
+            "to":tradecenterAddress,
+            "value":"0x0",
+            "data":tradeCenter.acceptContract.getData(index),
+            "chainId":1994
+        };
+        let tx = new window.ethereumjs.Tx(rawTransaction);
+
+        let privateKey = window.keythereum.recover(password,fileOb);
+        privateKey = privateKey.toString('hex');
+
+        let buf = Buffer.Buffer.from(privateKey,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+
+
+
     }
 
+    getAcceptation(index,adr) {
 
-         let gasC = await tradeCenter.acceptContract.estimateGas({from:adr});
-     console.log(gasC);
-    let s = await tradeCenter.acceptContract.sendTransaction({from:adr,gas:gasC});
-    console.log(s);
-}
+        this.biggestNumber(index);
+        if(!web3.isAddress(adr)){
+            throw "Inncorect address";
+        }
+        return tradeCenter.getAcceptation.call(index,{from:adr});
 
-async function unlockAccount(adr,pass) {
-
-
-   return await web3.personal.unlockAccount(adr,pass,1);
-}
-
-async function addRecipient(adr,cr) {
-
-    if(!web3.isAddress(adr)){
-        return false;
     }
 
-       let gasCost = await tradeCenter.addRecipient.estimateGas(adr,{from:cr});
-     console.log(gasCost);
-    let s = await tradeCenter.addRecipient.sendTransaction(adr,{from:cr});
+    rejectContract(index,password) {
 
-}
+        this.biggestNumber(index);
+        let count = web3.eth.getTransactionCount(this.mainAddress);
+        let gasL = tradeCenter.rejectContract.estimateGas(index,{from:this.mainAddress});
 
-async function getTokens(adr){
+        let rawTransaction = {
+            "from":this.mainAddress,
+            "nonce":"0x"+count.toString(16),
+            "gasLimit":gasL,
+            "to":tradecenterAddress,
+            "value":"0x0",
+            "data":tradeCenter.rejectContract.getData(index),
+            "chainId":1994
+        };
 
-    return web3.fromWei(tradeCenter.getTokens({from:adr}),"ether");
-}
+        let tx = new window.ethereumjs.Tx(rawTransaction);
 
-*/
+        let privateKey = window.keythereum.recover(password,fileOb);
+        privateKey = privateKey.toString('hex');
+
+        let buf = Buffer.Buffer.from(privateKey,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+    }
+
+    getReject(index,adr) {
+
+        this.biggestNumber(index);
+        if(!web3.isAddress){
+            throw "Inncorect address";
+
+        }
+        return tradeCenter.getReject.call(index,{from:adr});
+    }
+
+};
 
 if(typeof web3 !== 'undefined'){
 
@@ -748,65 +816,247 @@ if(typeof web3 !== 'undefined'){
 
     var account1 = web3.eth.accounts[1];
 
-/*   var count = web3.eth.getTransactionCount(account0);
-
-var account2 = "0x883ae23c4cf3d429bdf3b9b145fb629f83323f3c";
-
-//console.log(count);
-
-var gasL = tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,200,'0x20',{from:account0});
-console.log(String(gasL).toString('hex'));
-
-    var rawTransaction = {
-
-        "from": account0,
-        "nonce":"0x"+count.toString(16),
-        "gasLimit": gasL,
-        "to":SafeCoinAddress,
-        "value":"0x0",
-        "data":tokenContract.transfer['address,uint256,bytes'].getData(tradecenterAddress,200,'0x20'),
-        "chainId":1994
-
-    };
-
-
-var tx = new window.ethereumjs.Tx(rawTransaction);
-
-
-console.log( Buffer.Buffer.from('0x6a6b2703ea413be70efcdb44b7d046ec2e166981556b1a2eeda0f180e506aee9','hex'));
-
-var privat = '0x6a6b2703ea413be70efcdb44b7d046ec2e166981556b1a2eeda0f180e506aee9';
-
-
-buf = Buffer.Buffer.from('6a6b2703ea413be70efcdb44b7d046ec2e166981556b1a2eeda0f180e506aee9','hex');
-
-console.log(buf);
-
-tx.sign(buf);
-
-
-console.log(web3.eth);
-var serializedTx = tx.serialize();
-
-//var receipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
-
-
-console.log(tokenContract.balanceOf(account2));
-
-web3.eth.getGasPrice(function(e,r){
-
-    console.log(r/10**9);
-});
-
-console.log(web3.eth.getBlock('latest').gasLimit);*/
-
-
+//  let gasCost =  tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,web3.toWei(1,"ether"),web3.fromAscii("fd"));
+//  console.log(gasCost);
+//   let hashT =   tokenContract.transfer['address,uint256,bytes'].sendTransaction(tradecenterAddress,web3.toWei(1,"ether"),web3.fromAscii("fd"),{from:account1,gas:gasCost});
+//
 var adr = document.getElementById("addressProfile");
 var tok = document.getElementById("tokensProfile");
 var eth = document.getElementById("ethProfile");
 address = address.replace("#","");
 
+
+function recipientCreatorSetter(contractM,index,text,inputChange,ledCre,ledRe){
+    if(contractM.mainAddress == contractM.getCreator(index)){
+        text.innerHTML = "Recipient:";
+        inputChange.value = contractM.getRecipientContract(index);
+    }else {
+
+        text.innerHTML = "Creator:";
+        inputChange.value = contractM.getCreator(index);
+    }
+
+        if(contractM.getAcceptation(index,contractM.getCreator(index))){
+            ledCre[0].style.backgroundColor = "green";
+
+        }else {
+
+            ledCre[0].style.backgroundColor = "red";
+        }
+        if(contractM.getAcceptation(index,contractM.getRecipientContract(index))){
+            ledRe[0].style.backgroundColor = "green";
+
+        }else {
+
+            ledRe[0].style.backgroundColor = "red";
+        }
+    if(contractM.getReject(index,contractM.getCreator(index))){
+        ledCre[1].style.backgroundColor = "green";
+
+    }else {
+        ledCre[1].style.backgroundColor = "red";
+    }
+    if(contractM.getReject(index,contractM.getRecipientContract(index))){
+        ledRe[1].style.backgroundColor = "green";
+
+    }else {
+
+        ledRe[1].style.backgroundColor = "red";
+    }
+}
+
+function generateInfo(contractM,index) {
+
+    if(contractM.mainAddress == contractM.getCreator(index)){
+        return "Recipient:"+contractM.getRecipientContract(index).substring(0,lenghtAddress)+"<br>"+"Info:"+contractM.getData(index);
+
+    }else {
+
+        return "Creatort:"+contractM.getCreator(index).substring(0,lenghtAddress)+"<br>"+"Info:"+contractM.getData(index);
+    }
+
+}
+
+function showInDiv() {
+
+    let contractManager = new ContractManager(address);
+
+    let contractIndexArray = contractManager.getAllContract;
+
+    let currentCol = document.getElementById("CurrentContract");
+
+    let historyCol = document.getElementById("HistoryContract");
+
+    let historyP = document.createElement("p");
+    historyP.className = "text-center";
+    historyP.innerHTML = "History";
+    historyCol.innerHTML = "";
+    historyCol.appendChild(historyP);
+
+    let currentP = document.createElement("p");
+    currentP.className = "text-center";
+    currentP.innerHTML = "Current";
+    currentCol.innerHTML = "";
+    currentCol.appendChild(currentP);
+
+
+    let valueT = document.getElementById("InputValue");
+    let data = document.getElementById("InputData");
+    let recipientD = document.getElementById("InputRecipient");
+    let btnContract = document.getElementById("CreateContractBtn")
+    let recipientDivD = document.getElementById("addRecipientDiv");
+    let acButton = document.getElementById("AcceptContract");
+    let reButton = document.getElementById("RejectContract");
+
+    let ledCreatorAc = document.getElementById("CreatorInfoAceLed");
+    let ledRecipieAc = document.getElementById("RecipientInfoAceLed");
+    let recText = document.getElementById("Recipient");
+
+    let ledCreatorRe = document.getElementById("CreatorInfoRejLed");
+    let ledRecipieRe = document.getElementById("RecipientInfoRejLed");
+
+    for(let i=0;i<contractIndexArray.length;i++){
+
+
+        if(!web3.isAddress(contractManager.getRecipientContract(contractIndexArray[i]))){
+            let currentDivNoRecipient = document.createElement("div");
+            currentDivNoRecipient.className = "row-md-4 smallView";
+            let noRecipient = document.createElement("div");
+            noRecipient.className = "noRecipientSet";
+            let noTextRec = document.createTextNode("No Recipient Set");
+            noRecipient.appendChild(noTextRec);
+            currentDivNoRecipient.appendChild(noRecipient);
+
+            currentDivNoRecipient.onclick = function(e) {
+
+                let indexCurrent = contractIndexArray[i];
+
+                let tokensCount = contractManager.getTokens(indexCurrent);
+
+                valueT.value = tokensCount;
+                valueT.disabled = true;
+
+                let dataCurrent = contractManager.getData(indexCurrent);
+                data.value = dataCurrent;
+                data.disabled = true;
+
+                recipientD.disabled = false;
+                recipientDivD.style.display = "block";
+                btnContract.style.display = "block";
+                currentContractIndex = indexCurrent;
+
+                acButton.style.display = "none";
+                reButton.style.display = "none";
+                recText.innerHTML = "Recipient:";
+                document.getElementById("infoToShow").style.display = "none";
+
+                recipientD.value = "";
+            };
+
+            currentDivNoRecipient.innerHTML += "Info:"+contractManager.getData(contractIndexArray[i]);
+            currentCol.appendChild(currentDivNoRecipient);
+
+
+            continue;
+
+        }
+
+        if(contractManager.isHistory(contractIndexArray[i])){
+
+
+
+            let currentDivNoRecipient = document.createElement("div");
+            currentDivNoRecipient.className = "row-md-4 smallView";
+            currentDivNoRecipient.innerHTML = generateInfo(contractManager,contractIndexArray[i]);
+            currentDivNoRecipient.id = "contractIndex"+contractIndexArray[i];
+            currentDivNoRecipient.onclick = function() {
+
+                let indexCurrent = contractIndexArray[i];
+                let tokensCount = contractManager.getTokens(indexCurrent);
+                valueT.value = tokensCount;
+                valueT.disabled = true;
+                let dataCurrent = contractManager.getData(indexCurrent);
+                data.value = dataCurrent;
+                data.disabled = true;
+                recipientDivD.style.display = "block";
+                btnContract.style.display = "block";
+                currentContractIndex = indexCurrent;
+                recipientCreatorSetter(contractManager,indexCurrent,recText,recipientD,[ledCreatorAc,ledCreatorRe],[ledRecipieAc,ledRecipieRe]);
+                recipientD.disabled = true;
+                acButton.style.display = "none";
+                reButton.style.display = "none";
+
+                document.getElementById("infoToShow").style.display = "block";
+                btnContract.innerHTML = "Create Contract";
+            }
+
+
+            currentDivNoRecipient.style.backgroundColor = "#ffe6e6";
+            historyCol.appendChild(currentDivNoRecipient);
+
+
+
+        }else {
+
+            let currentDivNoRecipient = document.createElement("div");
+            currentDivNoRecipient.className = "row-md-4 smallView";
+            currentDivNoRecipient.innerHTML = generateInfo(contractManager,contractIndexArray[i]);
+            currentDivNoRecipient.id = "contractIndex"+contractIndexArray[i];
+
+            currentDivNoRecipient.onclick = function(e) {
+                let indexCurrent = contractIndexArray[i];
+                let tokensCount = contractManager.getTokens(indexCurrent);
+                valueT.value = tokensCount;
+                valueT.disabled = true;
+                let dataCurrent = contractManager.getData(indexCurrent);
+                data.value = dataCurrent;
+                data.disabled = true;
+                recipientDivD.style.display = "block";
+                btnContract.style.display = "block";
+                currentContractIndex = indexCurrent;
+                recipientCreatorSetter(contractManager,indexCurrent,recText,recipientD,[ledCreatorAc,ledCreatorRe],[ledRecipieAc,ledRecipieRe]);
+                recipientD.disabled = true;
+                acButton.style.display = "block";
+                reButton.style.display = "block";
+
+                document.getElementById("infoToShow").style.display = "block";
+                console.log(indexCurrent);
+                btnContract.innerHTML = "Create Contract";
+
+            };
+
+            currentDivNoRecipient.style.backgroundColor = "#e6f2ff";
+
+
+            currentCol.appendChild(currentDivNoRecipient);
+
+        }
+
+
+
+
+
+
+
+    }
+
+}
+
+//TODO delete apply
+
+
+
 window.onload = function(){
+
+
+    document.getElementById("AcceptContract").style.display = "none";
+    document.getElementById("RejectContract").style.display = "none";
+
+
+
+    document.getElementById("infoToShow").style.display = "none";
+
+    showInDiv();
 
 
 
@@ -814,6 +1064,7 @@ window.onload = function(){
 
     tok.innerHTML = web3.fromWei(tokenContract.balanceOf.call(address),"ether");
     eth.innerHTML = web3.fromWei(web3.eth.getBalance(address));
+
 
 };
 
@@ -824,6 +1075,158 @@ setInterval(function(){
     eth.innerHTML = web3.fromWei(web3.eth.getBalance(address));
 
 
+    showInDiv();
+    if(currentContractIndex != null){
+    document.getElementById("contractIndex"+currentContractIndex).click();
+    }
 
 },3000)
 
+
+
+document.getElementById("CreateContractBtn").onclick = function(e){
+
+    let valueT = document.getElementById("InputValue");
+    let data = document.getElementById("InputData");
+    let recipientD = document.getElementById("InputRecipient");
+    let recipientDivD = document.getElementById("addRecipientDiv");
+
+
+     if(valueT.disabled && data.disabled && recipientD.value != '' && !recipientDivD.disabled && !recipientD.disabled) {
+
+        if(currentContractIndex == null){
+            throw "No Contract select";
+        }
+
+        let contractMa = new ContractManager(address);
+        let pass = prompt("Enter password for account");
+        contractMa.addRecipient(recipientD.value,currentContractIndex,pass);
+
+        valueT.value = "";
+        data.value = "";
+        recipientDivD.style.display = "none";
+        recipientD.value = "";
+        e.target.style.display = "none";
+        data.disabled = false;
+        valueT.disabled = false;
+        e.target.innerHTML = "Create Contract";
+        e.target.style.backgroundColor = "#65737e";
+        return;
+    }
+
+    else if(valueT.value != '' && data.value != '' && !valueT.disabled && !data.disabled){
+
+        let pass = prompt("Enter password for account");
+        CreateSafeContract(address,parseInt(valueT.value),data.value,pass);
+
+        valueT.value = "";
+        data.value = "";
+        data.disabled = false;
+        recipientD.disabled = false;
+        e.target.style.display = "none";
+        e.target.innerHTML = "Create Contract";
+        e.target.style.backgroundColor = "#65737e";
+        return;
+
+    }
+
+        valueT.value = "";
+        valueT.disabled = false;
+        data.value = "";
+        data.disabled = false;
+        recipientD.disabled = false;
+        recipientD.value = "";
+        recipientDivD.style.display = "none";
+        e.target.style.display = "none";
+
+        document.getElementById("AcceptContract").style.display = "none";
+        document.getElementById("RejectContract").style.display = "none";
+
+    document.getElementById("infoToShow").style.display = "none";
+
+                e.target.innerHTML = "Create Contract";
+
+                e.target.style.backgroundColor = "#65737e";
+
+    currentContractIndex = null;
+};
+
+
+document.getElementById("InputRecipient").onkeypress = function(){
+
+
+
+};
+
+document.getElementById("InputValue").onkeyup = function(e) {
+
+
+    let btn = document.getElementById("CreateContractBtn");
+    let data = document.getElementById("InputData");
+
+    if(data.value != '' && e.target.value != ''){
+        btn.style.display = "block";
+    }else{
+
+        btn.style.display = "none";
+    }
+
+};
+
+document.getElementById("InputData").onkeyup = function(e) {
+
+
+    let btn = document.getElementById("CreateContractBtn");
+    let valueT = document.getElementById("InputValue");
+
+    if(valueT.value != '' && e.target.value != ''){
+        btn.style.display = "block";
+    }else{
+
+        btn.style.display = "none";
+    }
+
+};
+
+
+
+document.getElementById("InputRecipient").onkeyup = function(e) {
+
+    let btnContract = document.getElementById("CreateContractBtn")
+    if(e.target.value != ''){
+        btnContract.innerHTML = "Add Recipient";
+
+                btnContract.style.backgroundColor = "#4CAF50";
+    }else{
+        btnContract.innerHTML = "Create Contract";
+
+                btnContract.style.backgroundColor = "#65737e";
+    }
+
+};
+
+document.getElementById("AcceptContract").onclick = function(){
+
+    contractManager = new ContractManager(address);
+
+    let pass = prompt("Enter password");
+
+    contractManager.acceptContract(currentContractIndex,pass);
+
+
+
+
+};
+
+
+document.getElementById("RejectContract").onclick = function(){
+
+    contractManager = new ContractManager(address);
+
+
+    let pass = prompt("Enter password");
+    contractManager.rejectContract(currentContractIndex,pass);
+
+
+
+};

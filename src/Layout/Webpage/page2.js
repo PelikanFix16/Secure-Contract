@@ -241,7 +241,11 @@ function resizeColumns () {
         document.getElementsByClassName("col-md-4")[2].style.left = window.innerWidth/2+"px";
 
     document.getElementById("RejectContract").style.marginLeft = window.innerWidth/2+"px";
+    document.getElementById("CreateContractBtn").style.left = window.innerWidth/1.8+"px";
 
+        document.getElementById("InputRecipient").style.width = window.innerWidth/2.5+"px";
+        document.getElementById("InputData").style.width = window.innerWidth/2.5+"px";
+        lenghtAddress = 9;
     }
     else{
 
@@ -255,14 +259,26 @@ function resizeColumns () {
     document.getElementsByClassName("col-md-4")[1].style.width = window.innerWidth/6+"px";
     document.getElementsByClassName("col-md-4")[2].style.width = window.innerWidth/6+"px";
     document.getElementById("RejectContract").style.marginLeft = window.innerWidth/3+"px";
+    document.getElementById("CreateContractBtn").style.left = window.innerWidth/2.5+"px";
+        document.getElementById("InputRecipient").style.width = window.innerWidth/4+"px";
+        document.getElementById("InputData").style.width = window.innerWidth/4+"px";
+        lenghtAddress = 15;
+
     }
 
     if(window.innerWidth>3000){
 
     document.getElementById("RejectContract").style.marginLeft = window.innerWidth/3.7+"px";
+        document.getElementById("CreateContractBtn").style.left = window.innerWidth/2.2+"px";
+        document.getElementById("InputRecipient").style.width = window.innerWidth/10+"px";
+        document.getElementById("InputData").style.width = window.innerWidth/10+"px";
+
+
+        lenghtAddress = 42;
+
     }
 
-    document.getElementsByClassName("col-md-4")[0].style.height = window.innerHeight/4+"px";
+    document.getElementsByClassName("col-md-4")[0].style.height = window.innerHeight/3.7+"px";
 
     document.getElementsByClassName("col-md-4")[1].style.height = window.innerHeight/1.1+"px";
 
@@ -272,5 +288,8 @@ function resizeColumns () {
 
     document.getElementById("RecipientInfoRej").style.marginLeft = window.innerWidth/4.7+"px";
     //document.getElementById("RejectContract").style.marginLeft = window.innerWidth/3+"px";
+
+
+
 }
 
