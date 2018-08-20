@@ -131,6 +131,7 @@ var MakeAc = document.getElementById("PasswordBtn");
 
 
 
+
 MakeAc.onclick = function(){
     var pass = document.getElementById("PasswordInput");
     if(pass.value.length < 9){
@@ -158,7 +159,7 @@ MakeAc.onclick = function(){
     MakeAc.style.visibility = "hidden";
 
     var acc = createAccount(pass.value);
-
+    localStorage["file1"] = acc.fileContent;
 
     var element = document.createElement('a');
     var node = document.createTextNode("Download Key");
