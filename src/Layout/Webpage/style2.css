@@ -176,6 +176,7 @@ html {
     text-align:center;
    height:100%; 
     cursor:pointer;
+    background-color:#353839;
 }
 
 
@@ -183,7 +184,6 @@ html {
 
     width:50%;
     height:25%;
-    background-color:#353839;
     margin-top:0.5%;
     margin-left:20%;
     display:none;
@@ -446,3 +446,8 @@ input {
     left:0px;
 }
 
+#privateToUpload {
+
+    top:20%;
+
+}

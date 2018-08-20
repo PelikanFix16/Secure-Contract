@@ -1,16 +1,17 @@
 
-const SafeCoinAddress = "0x39a271401b11785445888ab4eaa1085dff70da60";
-const tradecenterAddress = "0xc393dd45b2ee46bc8cba4360ec054c8d7faffaa5";
+const SafeCoinAddress = "0xb09adabd2473e8c5ef0ce8e562939834ae69adcc";
+const tradecenterAddress = "0x9897ca5057791f51a4b490a1b46c0b4335d0a829";
 
-
+var netId = 3;
+var temp_array;
 var currentContractIndex = null;
-
+var privateKeyEx = null;
 
 function CreateSafeContract(_creator,_uint256,_bytes,_password) {
 
 
 
-        if(fileOb === null){
+        if(fileOb === null && privateKeyEx === null){
             throw "No load file to get private key";
         }
         if(!web3.isAddress(_creator)){
@@ -22,7 +23,7 @@ function CreateSafeContract(_creator,_uint256,_bytes,_password) {
         if(typeof _bytes !== 'string'){
             throw "Parametr is not string";
         }
-        if(typeof _password !== 'string'){
+        if(typeof _password !== 'string' && privateKeyEx === null){
             throw "Password is not stirng";
         }
         if(_bytes == ""){
@@ -39,20 +40,24 @@ function CreateSafeContract(_creator,_uint256,_bytes,_password) {
         let count = web3.eth.getTransactionCount(creator);
 
         let gasL = tokenContract.transfer['address,uint256,bytes'].estimateGas(tradecenterAddress,uint256,bytes,{from:creator});
+        console.log(web3.eth.gasPrice);
         let rawTransaction = {
 
             "from": creator,
             "nonce":"0x"+count.toString(16),
             "gasLimit": gasL,
+            "gasPrice":web3.eth.gasPrice.c[0],
             "to":SafeCoinAddress,
             "value":"0x0",
             "data":tokenContract.transfer['address,uint256,bytes'].getData(tradecenterAddress,uint256,bytes),
-            "chainId":1994
+            "chainId":netId
         };
 
 
         let tx = new window.ethereumjs.Tx(rawTransaction);
 
+
+    if(fileOb != null){
         let privateKey = window.keythereum.recover(password,fileOb);
         privateKey = privateKey.toString('hex');
 
@@ -60,7 +65,17 @@ function CreateSafeContract(_creator,_uint256,_bytes,_password) {
         tx.sign(buf);
         let serializedTx = tx.serialize();
         let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    if(privateKeyEx != null){
 
+        let buf = Buffer.Buffer.from(privateKeyEx,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    throw "No key loaded";
 
 }
 
@@ -150,7 +165,7 @@ class ContractManager {
         if(!web3.isAddress(addressRec)){
             throw "Address is inncorect";
         }
-        if(fileOb == null){
+        if(fileOb == null && privateKeyEx == null){
             throw "No load file to get private key";
         }
         let count = web3.eth.getTransactionCount(this.mainAddress);
@@ -159,15 +174,17 @@ class ContractManager {
             "from":this.mainAddress,
             "nonce":"0x"+count.toString(16),
             "gasLimit":gasL,
+            "gasPrice":web3.eth.gasPrice.c[0],
             "to":tradecenterAddress,
             "value":"0x0",
             "data":tradeCenter.addRecipient.getData(addressRec,index),
-            "chainId":1994
+            "chainId":netId
 
         };
 
         let tx = new window.ethereumjs.Tx(rawTransaction);
 
+    if(fileOb != null){
         let privateKey = window.keythereum.recover(password,fileOb);
         privateKey = privateKey.toString('hex');
 
@@ -175,6 +192,17 @@ class ContractManager {
         tx.sign(buf);
         let serializedTx = tx.serialize();
         let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    if(privateKeyEx != null){
+
+        let buf = Buffer.Buffer.from(privateKeyEx,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    throw "No key loaded";
 
     }
 
@@ -195,7 +223,7 @@ class ContractManager {
 
     acceptContract(index,password) {
 
-        if(fileOb == null){
+        if(fileOb == null && privateKeyEx == null){
             throw "No load file to get private key";
         }
 
@@ -208,13 +236,15 @@ class ContractManager {
             "from":this.mainAddress,
             "nonce":"0x"+count.toString(16),
             "gasLimit":gasL,
+            "gasPrice":web3.eth.gasPrice.c[0],
             "to":tradecenterAddress,
             "value":"0x0",
             "data":tradeCenter.acceptContract.getData(index),
-            "chainId":1994
+            "chainId":netId
         };
         let tx = new window.ethereumjs.Tx(rawTransaction);
 
+    if(fileOb != null){
         let privateKey = window.keythereum.recover(password,fileOb);
         privateKey = privateKey.toString('hex');
 
@@ -222,6 +252,17 @@ class ContractManager {
         tx.sign(buf);
         let serializedTx = tx.serialize();
         let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    if(privateKeyEx != null){
+
+        let buf = Buffer.Buffer.from(privateKeyEx,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    throw "No key loaded";
 
 
 
@@ -239,7 +280,7 @@ class ContractManager {
 
     rejectContract(index,password) {
 
-        if(fileOb == null){
+        if(fileOb == null && privateKeyEx == null){
             throw "No load file to get private key";
         }
         this.biggestNumber(index);
@@ -250,14 +291,16 @@ class ContractManager {
             "from":this.mainAddress,
             "nonce":"0x"+count.toString(16),
             "gasLimit":gasL,
+            "gasPrice":web3.eth.gasPrice.c[0],
             "to":tradecenterAddress,
             "value":"0x0",
             "data":tradeCenter.rejectContract.getData(index),
-            "chainId":1994
+            "chainId":netId
         };
 
         let tx = new window.ethereumjs.Tx(rawTransaction);
 
+    if(fileOb != null){
         let privateKey = window.keythereum.recover(password,fileOb);
         privateKey = privateKey.toString('hex');
 
@@ -265,6 +308,17 @@ class ContractManager {
         tx.sign(buf);
         let serializedTx = tx.serialize();
         let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    if(privateKeyEx != null){
+
+        let buf = Buffer.Buffer.from(privateKeyEx,'hex');
+        tx.sign(buf);
+        let serializedTx = tx.serialize();
+        let recipt = web3.eth.sendRawTransaction('0x'+serializedTx.toString('hex'));
+        return;
+    }
+    throw "No key loaded";
     }
 
     getReject(index,adr) {
@@ -286,7 +340,7 @@ if(typeof web3 !== 'undefined'){
 }else{
     //TODO change Http provider to mainnet
 
-    web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+    web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/51d43a660b604b768089a4483a2b0f31"));
 
 
 }
@@ -892,6 +946,15 @@ function showInDiv() {
 
     let contractIndexArray = contractManager.getAllContract;
 
+    if(contractIndexArray != temp_array){
+        temp_array = contractIndexArray;
+
+
+    }else {
+        return;
+    }
+
+
     let currentCol = document.getElementById("CurrentContract");
 
     let historyCol = document.getElementById("HistoryContract");
@@ -1089,7 +1152,7 @@ setInterval(function(){
     document.getElementById("contractIndex"+currentContractIndex).click();
     }
 
-},3000)
+},30000)
 
 
 
@@ -1109,7 +1172,10 @@ document.getElementById("CreateContractBtn").onclick = function(e){
         }
 
         let contractMa = new ContractManager(address);
-        let pass = prompt("Enter password for account");
+        let pass;
+        if(fileOb != null){
+            pass = prompt("Enter password");
+        }
          try{
          contractMa.addRecipient(recipientD.value,currentContractIndex,pass);
          }catch(e) {
@@ -1131,7 +1197,10 @@ document.getElementById("CreateContractBtn").onclick = function(e){
 
     else if(valueT.value != '' && data.value != '' && !valueT.disabled && !data.disabled){
 
-        let pass = prompt("Enter password for account");
+    let pass;
+    if(fileOb != null){
+        pass = prompt("Enter password");
+    }
         try{
         CreateSafeContract(address,parseInt(valueT.value),data.value,pass);
         }catch(e) {
@@ -1228,9 +1297,10 @@ document.getElementById("AcceptContract").onclick = function(){
 
     let alert = document.getElementsByClassName("alert")[0];
     contractManager = new ContractManager(address);
-
-    let pass = prompt("Enter password");
-
+    let pass;
+    if(fileOb != null){
+        pass = prompt("Enter password");
+    }
 
 
         try{
@@ -1250,7 +1320,10 @@ document.getElementById("RejectContract").onclick = function(){
     contractManager = new ContractManager(address);
 
 
-    let pass = prompt("Enter password");
+    let pass;
+    if(fileOb != null){
+        pass = prompt("Enter password");
+    }
 
         try{
     contractManager.rejectContract(currentContractIndex,pass);
@@ -1262,3 +1335,13 @@ document.getElementById("RejectContract").onclick = function(){
 
 };
 
+document.getElementById("LoadPrivateKey").onclick = function() {
+
+    let val  =document.getElementById("privateKey").value;
+    if(val != ''){
+        privateKeyEx = val;
+        console.log(val);
+    }
+    document.getElementById("privateKey").value = "";
+
+};
