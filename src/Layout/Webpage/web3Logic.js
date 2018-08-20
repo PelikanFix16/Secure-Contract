@@ -7,6 +7,21 @@ var temp_array;
 var currentContractIndex = null;
 var privateKeyEx = null;
 
+
+if(localStorage["file1"] !== undefined){
+    fileOb = JSON.parse(localStorage["file1"]);
+
+}
+
+if(localStorage["key1"] !== undefined){
+    privateKeyEx = localStorage["key1"];
+
+
+}
+
+console.log(localStorage["key1"]);
+console.log(localStorage["file1"]);
+
 function CreateSafeContract(_creator,_uint256,_bytes,_password) {
 
 
@@ -1344,4 +1359,5 @@ document.getElementById("LoadPrivateKey").onclick = function() {
     }
     document.getElementById("privateKey").value = "";
 
+    localStorage["key1"] = privateKeyEx;
 };

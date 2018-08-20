@@ -211,6 +211,7 @@ function rec(file) {
 
     fileOb = file;
 
+    localStorage["file1"] = JSON.stringify(fileOb);
 }
 
 
