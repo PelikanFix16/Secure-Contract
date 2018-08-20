@@ -33,6 +33,7 @@ function bar(x) {
 
         let ab =  document.getElementById("About");
 
+    let alert = document.getElementsByClassName("alert")[0];
             let abo1 = document.getElementById("ban");
             let key1 = document.getElementById("keyAdd");
             let contract = document.getElementById("Contracts");
@@ -41,6 +42,7 @@ function bar(x) {
             key1.style.display = "none";
             abo1.style.display="block";
             contract.style.display = "none";
+              alert.style.display = "none";
 
         if(!iks){
             let te = document.getElementById("btn");
@@ -53,6 +55,7 @@ function bar(x) {
               key1.style.display = "block";
               abo1.style.display = "none";
               contract.style.display = "none";
+              alert.style.display = "none";
         if(!iks){
             let te = document.getElementById("btn");
             myFunction(te);
@@ -69,6 +72,7 @@ function bar(x) {
               key1.style.display = "none";
               abo1.style.display = "none";
               contract.style.display = "block";
+              alert.style.display = "none";
           };
 
         openNav();

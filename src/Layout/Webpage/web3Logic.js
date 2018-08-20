@@ -1,6 +1,6 @@
 
-const SafeCoinAddress = "0xdb261783579e41b6f2ace7a82bb66cf9d596e4c5";
-const tradecenterAddress = "0xcf655dcf9729474ad399206c3ab8b6c4afd826c0";
+const SafeCoinAddress = "0x39a271401b11785445888ab4eaa1085dff70da60";
+const tradecenterAddress = "0xc393dd45b2ee46bc8cba4360ec054c8d7faffaa5";
 
 
 var currentContractIndex = null;
@@ -150,6 +150,9 @@ class ContractManager {
         if(!web3.isAddress(addressRec)){
             throw "Address is inncorect";
         }
+        if(fileOb == null){
+            throw "No load file to get private key";
+        }
         let count = web3.eth.getTransactionCount(this.mainAddress);
         let gasL = tradeCenter.addRecipient.estimateGas(addressRec,index,{from:this.mainAddress});
         let rawTransaction = {
@@ -192,6 +195,9 @@ class ContractManager {
 
     acceptContract(index,password) {
 
+        if(fileOb == null){
+            throw "No load file to get private key";
+        }
 
         this.biggestNumber(index);
 
@@ -233,6 +239,9 @@ class ContractManager {
 
     rejectContract(index,password) {
 
+        if(fileOb == null){
+            throw "No load file to get private key";
+        }
         this.biggestNumber(index);
         let count = web3.eth.getTransactionCount(this.mainAddress);
         let gasL = tradeCenter.rejectContract.estimateGas(index,{from:this.mainAddress});
@@ -837,31 +846,31 @@ function recipientCreatorSetter(contractM,index,text,inputChange,ledCre,ledRe){
     }
 
         if(contractM.getAcceptation(index,contractM.getCreator(index))){
-            ledCre[0].style.backgroundColor = "green";
+            ledCre[0].style.backgroundColor = "#ccffcc";
 
         }else {
 
-            ledCre[0].style.backgroundColor = "red";
+            ledCre[0].style.backgroundColor = "#ffcccc";
         }
         if(contractM.getAcceptation(index,contractM.getRecipientContract(index))){
-            ledRe[0].style.backgroundColor = "green";
+            ledRe[0].style.backgroundColor = "#ccffcc";
 
         }else {
 
-            ledRe[0].style.backgroundColor = "red";
+            ledRe[0].style.backgroundColor = "#ffcccc";
         }
     if(contractM.getReject(index,contractM.getCreator(index))){
-        ledCre[1].style.backgroundColor = "green";
+        ledCre[1].style.backgroundColor = "#ccffcc";
 
     }else {
-        ledCre[1].style.backgroundColor = "red";
+        ledCre[1].style.backgroundColor = "#ffcccc";
     }
     if(contractM.getReject(index,contractM.getRecipientContract(index))){
-        ledRe[1].style.backgroundColor = "green";
+        ledRe[1].style.backgroundColor = "#ccffcc";
 
     }else {
 
-        ledRe[1].style.backgroundColor = "red";
+        ledRe[1].style.backgroundColor = "#ffcccc";
     }
 }
 
@@ -1091,6 +1100,7 @@ document.getElementById("CreateContractBtn").onclick = function(e){
     let recipientD = document.getElementById("InputRecipient");
     let recipientDivD = document.getElementById("addRecipientDiv");
 
+    let alert = document.getElementsByClassName("alert")[0];
 
      if(valueT.disabled && data.disabled && recipientD.value != '' && !recipientDivD.disabled && !recipientD.disabled) {
 
@@ -1100,8 +1110,13 @@ document.getElementById("CreateContractBtn").onclick = function(e){
 
         let contractMa = new ContractManager(address);
         let pass = prompt("Enter password for account");
-        contractMa.addRecipient(recipientD.value,currentContractIndex,pass);
+         try{
+         contractMa.addRecipient(recipientD.value,currentContractIndex,pass);
+         }catch(e) {
 
+            alert.style.display = "block";
+            alert.innerHTML = e;
+         }
         valueT.value = "";
         data.value = "";
         recipientDivD.style.display = "none";
@@ -1110,15 +1125,19 @@ document.getElementById("CreateContractBtn").onclick = function(e){
         data.disabled = false;
         valueT.disabled = false;
         e.target.innerHTML = "Create Contract";
-        e.target.style.backgroundColor = "#65737e";
+         e.target.style.backgroundColor = "#65737e";
         return;
     }
 
     else if(valueT.value != '' && data.value != '' && !valueT.disabled && !data.disabled){
 
         let pass = prompt("Enter password for account");
+        try{
         CreateSafeContract(address,parseInt(valueT.value),data.value,pass);
-
+        }catch(e) {
+            alert.style.display = "block";
+            alert.innerHTML = e;
+        }
         valueT.value = "";
         data.value = "";
         data.disabled = false;
@@ -1207,13 +1226,19 @@ document.getElementById("InputRecipient").onkeyup = function(e) {
 
 document.getElementById("AcceptContract").onclick = function(){
 
+    let alert = document.getElementsByClassName("alert")[0];
     contractManager = new ContractManager(address);
 
     let pass = prompt("Enter password");
 
+
+
+        try{
     contractManager.acceptContract(currentContractIndex,pass);
-
-
+        }catch(e) {
+            alert.style.display = "block";
+            alert.innerHTML = e;
+        }
 
 
 };
@@ -1221,12 +1246,19 @@ document.getElementById("AcceptContract").onclick = function(){
 
 document.getElementById("RejectContract").onclick = function(){
 
+    let alert = document.getElementsByClassName("alert")[0];
     contractManager = new ContractManager(address);
 
 
     let pass = prompt("Enter password");
-    contractManager.rejectContract(currentContractIndex,pass);
 
+        try{
+    contractManager.rejectContract(currentContractIndex,pass);
+        }catch(e) {
+            alert.style.display = "block";
+            alert.innerHTML = e;
+        }
 
 
 };
+
