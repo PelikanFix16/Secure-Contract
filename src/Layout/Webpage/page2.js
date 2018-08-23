@@ -264,6 +264,10 @@ function resizeColumns () {
 
         document.getElementsByClassName("col-md-4")[1].style.left = 0+"px";
 
+        document.getElementById("loader").style.width = "25px";
+        document.getElementById("loader").style.height = "25px";
+        document.getElementById("loader1").style.width = "25px";
+        document.getElementById("loader1").style.height = "25px";
         document.getElementsByClassName("col-md-4")[2].style.left = 0+"px";
 
         document.getElementsByClassName("col-md-4")[2].style.bottom = 0+"px";
