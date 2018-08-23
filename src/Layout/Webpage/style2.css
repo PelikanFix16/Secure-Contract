@@ -235,6 +235,9 @@ html {
     .topnav p {
         font-size:20px;
     }
+    .smallView {
+        font-size:12px;
+    }
 
 }
 
@@ -245,12 +248,15 @@ html {
 
     }
     .topnav p {
-        font-size:8px;
+        font-size:4px;
     }
 
     .minimalShow {
         font-size:15px;
         height:60px;
+    }
+    .smallView {
+        font-size:9px;
     }
 }
 
@@ -414,7 +420,6 @@ background-color: #f44336;
     height:50px;
     margin:1%;
     margin-bottom:5%;
-    font-size:15px;
     cursor:pointer;
 
 }

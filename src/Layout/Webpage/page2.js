@@ -246,11 +246,19 @@ function resizeColumns () {
         document.getElementsByClassName("col-md-4")[2].style.left = window.innerWidth/2+"px";
 
     document.getElementById("RejectContract").style.marginLeft = window.innerWidth/2+"px";
-    document.getElementById("CreateContractBtn").style.left = window.innerWidth/1.8+"px";
+        document.getElementById("CreateContractBtn").style.left = window.innerWidth/5+"px";
+
+        document.getElementById("CreateContractBtn").style.top = window.innerHeight/2+"px";
 
         document.getElementById("InputRecipient").style.width = window.innerWidth/2.5+"px";
         document.getElementById("InputData").style.width = window.innerWidth/2.5+"px";
-        lenghtAddress = 9;
+        document.getElementById("AcceptContract").style.top = window.innerWidth/1.2+"px";
+        document.getElementById("RejectContract").style.top = window.innerWidth/1.2+"px";
+        lenghtAddress = 4;
+        document.getElementById("loader").style.width = "25px";
+        document.getElementById("loader").style.height = "25px";
+        document.getElementById("loader1").style.width = "25px";
+        document.getElementById("loader1").style.height = "25px";
     }
     else{
 
@@ -268,6 +276,7 @@ function resizeColumns () {
         document.getElementById("InputRecipient").style.width = window.innerWidth/4+"px";
         document.getElementById("InputData").style.width = window.innerWidth/4+"px";
         lenghtAddress = 15;
+        document.getElementById("CreateContractBtn").style.top = 0+"px";
 
     }
 
@@ -278,6 +287,7 @@ function resizeColumns () {
         document.getElementById("InputRecipient").style.width = window.innerWidth/10+"px";
         document.getElementById("InputData").style.width = window.innerWidth/10+"px";
 
+        document.getElementById("CreateContractBtn").style.top = 0+"px";
 
         lenghtAddress = 42;
 
