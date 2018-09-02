@@ -233,12 +233,31 @@ html {
         font-size:25px;
     }
     .topnav p {
-        font-size:20px;
+        font-size:15px;
     }
     .smallView {
         font-size:12px;
     }
+    #privateKey {
+        
+        width:500px;
+        height:40px;
+        font-size:16px;
 
+    }
+    #LoadPrivateKey{
+        padding:10px;
+    }
+
+    #loader {
+        width:40px;
+        height:40px;
+
+    }
+    #loader1 {
+        width:40px;
+        height:40px;
+    }
 }
 
 @media screen and (max-width:1023px) {
@@ -257,6 +276,21 @@ html {
     }
     .smallView {
         font-size:9px;
+    }
+    #privateKey {
+        
+        width:200px;
+        height:20px;
+        font-size:9px;
+    }
+    #loader {
+        width:25px;
+        height:25px;
+
+    }
+    #loader1 {
+        width:25px;
+        height:25px;
     }
 }
 
@@ -454,5 +488,28 @@ input {
 #privateToUpload {
 
     top:20%;
+
+}
+
+#privateKey {
+    background-color: #3CBC8D;
+    color: white;
+
+}
+
+#LoadPrivateKey {
+
+
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
 
 }

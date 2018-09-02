@@ -1,7 +1,7 @@
 
 
-const SafeCoinAddress = "0xb09adabd2473e8c5ef0ce8e562939834ae69adcc";
-const tradecenterAddress = "0x9897ca5057791f51a4b490a1b46c0b4335d0a829";
+const SafeCoinAddress = "0xdca649ed9501984c003bb05e6c28203ea49697b5";
+const tradecenterAddress = "0x2Ae9f9eEe13dbc7A5233F36177fAA663c084225D";
 
 var netId = 3;
 var temp_array = [];

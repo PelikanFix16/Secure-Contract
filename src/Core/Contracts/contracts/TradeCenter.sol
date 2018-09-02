@@ -131,9 +131,11 @@ contract TradeCenter is ERC223ReceivingContract{
 
         
         if(contr.creator && contr.recipient){
-            if(_safecoin.transfer(contr.to,contr.tokens)){
                 contr.historyTokens = 0;
+            if(_safecoin.transfer(contr.to,contr.tokens)){
                 return true;
+            }else{
+                contr.historyTokens = contr.tokens;
             }
             
         }
@@ -162,9 +164,11 @@ contract TradeCenter is ERC223ReceivingContract{
             contr.recipient = false;
         }
         if(contr.creatorReject && contr.recipientReject){
-            if(_safecoin.transfer(contr.from,contr.tokens)){
                 contr.historyTokens = 0;
+            if(_safecoin.transfer(contr.from,contr.tokens)){
                 return true;
+            }else{
+                contr.historyTokens = contr.tokens;
             }
         }
 

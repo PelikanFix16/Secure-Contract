@@ -4,12 +4,12 @@ var mnemonic = "mammal issue rebuild truth lizard police travel foam equal immen
 
 module.exports = {
   networks: {
-    development: {
+      /*   development: {
       host: "127.0.0.1",
       port: 8545,
       network_id: "*",
       gas:4000000
-    },
+    },*/
       ropsten: {
 
           provider: function() {
