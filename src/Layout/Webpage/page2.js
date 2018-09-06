@@ -228,7 +228,7 @@ window.addEventListener("resize",function(){
     resizeColumns();
 
     document.getElementById("navtop").style.height = window.innerHeight/40+"px";
-    document.getElementById("mySidenav").style.marginTop = window.innerHeight/40+"px";
+    document.getElementById("mySidenav").style.marginTop = window.innerHeight/599+"%";
 });
 
 
@@ -237,6 +237,7 @@ function resizeColumns () {
     document.getElementsByClassName("row")[0].style.width = window.innerWidth/1.2+"px";
 
 
+    document.getElementById("mySidenav").style.marginTop = window.innerHeight/599+"%";
 
     if(window.innerWidth<768){
 
