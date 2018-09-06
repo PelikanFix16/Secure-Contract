@@ -226,82 +226,6 @@ html {
     display:none;
 }
 
-@media screen and (min-width:1024px) {
-
-    #Welcome {
-
-        font-size:25px;
-    }
-    .topnav p {
-<<<<<<< HEAD
-        font-size:15px;
-=======
-        font-size:10px;
->>>>>>> caeeb42cefca0f789bca6a999c9b584230281800
-    }
-    .smallView {
-        font-size:12px;
-    }
-<<<<<<< HEAD
-    #privateKey {
-        
-        width:500px;
-        height:40px;
-        font-size:16px;
-
-    }
-    #LoadPrivateKey{
-        padding:10px;
-    }
-=======
-    
->>>>>>> caeeb42cefca0f789bca6a999c9b584230281800
-
-    #loader {
-        width:40px;
-        height:40px;
-
-    }
-    #loader1 {
-        width:40px;
-        height:40px;
-    }
-}
-
-@media screen and (max-width:1023px) {
-
-    #Welcome {
-        font-size:15px;
-
-    }
-    .topnav p {
-        font-size:4px;
-    }
-
-    .minimalShow {
-        font-size:15px;
-        height:60px;
-    }
-    .smallView {
-        font-size:9px;
-    }
-    #privateKey {
-        
-        width:200px;
-        height:20px;
-        font-size:9px;
-    }
-    #loader {
-        width:25px;
-        height:25px;
-
-    }
-    #loader1 {
-        width:25px;
-        height:25px;
-    }
-}
-
 .conView {
 
 
@@ -519,5 +443,6 @@ input {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     cursor: pointer;
+    margin-bottom:20%;
 
 }

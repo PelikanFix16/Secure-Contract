@@ -309,6 +309,21 @@ function resizeColumns () {
     //document.getElementById("RejectContract").style.marginLeft = window.innerWidth/3+"px";
 
 
+    document.getElementsByClassName("topnav")[0].style.paddingBottom=window.innerWidth/700+"%";
 
+    $("p").each(function(){
+        $(this)[0].style.fontSize = (window.innerWidth+window.innerHeight)/25+"%";
+    });
+    document.getElementById("loader").style.height = window.innerHeight/30+"px";
+
+    document.getElementById("loader").style.width = window.innerWidth/30+"px";
+
+    document.getElementById("loader").style.bottom = window.innerHeight/20+"%";
+
+    document.getElementById("loader1").style.height = window.innerHeight/30+"px";
+
+    document.getElementById("loader1").style.width = window.innerWidth/30+"px";
+
+    document.getElementById("loader1").style.bottom = window.innerHeight/20+"%";
 }
 
