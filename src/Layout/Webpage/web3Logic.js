@@ -10,7 +10,7 @@ var privateKeyEx = null;
 var lastSelect = [];
 var isCurrentArray = [];
 var isHisArray = [];
-
+const timeout = ms => new Promise(res => setTimeout(res, ms))
 Array.prototype.diff = function(a) {
     return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
@@ -1511,7 +1511,28 @@ document.getElementById("RejectContract").onclick = async function(){
     document.getElementById("loader1").style.display = "none";
 };
 
-document.getElementById("LoadPrivateKey").onclick = function() {
+document.getElementById("LoadPrivateKey").onclick = async function(e) {
+
+
+    let displ = document.getElementById("privateKey").style.display;
+
+
+    if(displ == "none"){
+
+        document.getElementById("privateKey").style.width = "0%";
+        document.getElementById("privateKey").style.display = "inline";
+
+        for(let i=0;i<70;i++){
+
+            document.getElementById("privateKey").style.width = i+"%";
+            await timeout(20);
+        }
+
+
+
+        return;
+
+    }
 
     let val  =document.getElementById("privateKey").value;
     if(val != ''){

@@ -171,13 +171,51 @@ html {
 }
 
 #upload {
-    color:white;
-   width:100%;
-    text-align:center;
-   height:100%; 
-    cursor:pointer;
-    background-color:#353839;
+  position: relative;
+  overflow: hidden;
 }
+#textup {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+#upload input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+#privateToUpload {
+  position: relative;
+  overflow: hidden;
+}
+#LoadPrivateKey {
+  border: 2px solid gray;
+  color: gray;
+  background-color: white;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+#privateToUpload input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
 
 
 #keyAdd {
@@ -438,7 +476,7 @@ input {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 12px;
     margin: 4px 2px;
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
@@ -446,3 +484,5 @@ input {
     margin-bottom:20%;
 
 }
+
+

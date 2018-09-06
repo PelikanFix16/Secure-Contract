@@ -125,6 +125,8 @@ function closeNav() {
 
     address = arr[1];
 
+
+
 $(document).ready(function(){
 
     //  let safe = document.getElementById("SafeContract");
@@ -138,6 +140,10 @@ $(document).ready(function(){
     //hist.style.height = window.innerHeight+"px";
 
     resizeColumns();
+
+    //document.getElementById("About").click();
+
+    document.getElementById("ban").style.display="block";
     document.getElementById("navtop").style.height = window.innerHeight/40+"px";
     document.getElementById("mySidenav").style.marginTop = window.innerHeight/40+"px";
     document.getElementById('file-input').addEventListener('change', readSingleFile, false);
@@ -316,13 +322,13 @@ function resizeColumns () {
     });
     document.getElementById("loader").style.height = window.innerHeight/30+"px";
 
-    document.getElementById("loader").style.width = window.innerWidth/30+"px";
+    document.getElementById("loader").style.width = window.innerWidth/34+"px";
 
     document.getElementById("loader").style.bottom = window.innerHeight/20+"%";
 
     document.getElementById("loader1").style.height = window.innerHeight/30+"px";
 
-    document.getElementById("loader1").style.width = window.innerWidth/30+"px";
+    document.getElementById("loader1").style.width = window.innerWidth/34+"px";
 
     document.getElementById("loader1").style.bottom = window.innerHeight/20+"%";
 }
